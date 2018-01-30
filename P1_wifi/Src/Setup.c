@@ -8,12 +8,10 @@
  */
 
 /**Includes*/
-#include "stm32l4xx_hal.h"
+#include "Setup.h"
 
 /* Private variables ---------------------------------------------------------*/
-SPI_HandleTypeDef hspi3;
-UART_HandleTypeDef huart1;
-PCD_HandleTypeDef hpcd_USB_OTG_FS;
+
 
 /**
   * @brief System Clock Configuration

@@ -10,10 +10,9 @@
 #include "stm32l4xx_hal.h"
 
 /* Private variables ---------------------------------------------------------*/
-
-/* Private variables ---------------------------------------------------------*/
-
-/* Private function prototypes -----------------------------------------------*/
+static uint16_t XferSize = 1000;
+static uint32_t SPI_Timeout = 1000;
+static uint8_t WIFI_return[1000];
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -39,6 +38,11 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
 
+  /* Initialize Wi-Fi module */
+  HAL_GPIO_WritePin(GPIOB, ISM43362_WAKEUP_Pin, GPIO_PIN_SET);
+  HAL_SPI_Transmit(&hspi3, (uint8_t *)"?\r", (uint16_t)2, SPI_Timeout);
+  HAL_SPI_Receive(&hspi3, WIFI_return, XferSize, SPI_Timeout);
+
   /* Infinite loop */
   while (1)
   {
@@ -46,3 +50,16 @@ int main(void)
 
   }
 }
+
+/* notes
+ * SPI I/O functions:
+ * HAL_StatusTypeDef HAL_SPI_Transmit(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+HAL_StatusTypeDef HAL_SPI_Receive(SPI_HandleTypeDef *hspi, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+HAL_StatusTypeDef HAL_SPI_TransmitReceive(SPI_HandleTypeDef *hspi, uint8_t *pTxData, uint8_t *pRxData, uint16_t Size,
+uint32_t Timeout);
+
+* GPIO write_pin
+*HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+*wi-fi wakeup on pin PB13 ->
+*HAL_GPIO_WritePin(GPIOB, ISM43362_WAKEUP_Pin, GPIO_PIN_SET);
+*/
