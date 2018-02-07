@@ -8,11 +8,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "Setup.h"
 #include "stm32l4xx_hal.h"
+#include "wifi.h"
 
 /* Private variables ---------------------------------------------------------*/
 static uint16_t XferSize = 1000;
 static uint32_t SPI_Timeout = 1000;
 static uint8_t WIFI_return[1000];
+static uint16_t failed;
+static WIFI_Status_t stat;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -34,14 +37,21 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_SPI3_Init();
+  //MX_SPI3_Init();
   MX_USART1_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
 
   /* Initialize Wi-Fi module */
+  stat = WIFI_Init();
+  failed = (uint16_t)SPI_WIFI_Init();
   HAL_GPIO_WritePin(GPIOB, ISM43362_WAKEUP_Pin, GPIO_PIN_SET);
+
+  /* Read/Write */
   HAL_SPI_Transmit(&hspi3, (uint8_t *)"?\r", (uint16_t)2, SPI_Timeout);
   HAL_SPI_Receive(&hspi3, WIFI_return, XferSize, SPI_Timeout);
+
+  failed = SPI_WIFI_SendData((uint8_t *)"?\r", (uint16_t)2, SPI_Timeout);
+  failed = SPI_WIFI_ReceiveData(WIFI_return, XferSize, SPI_Timeout);
 
   /* Infinite loop */
   while (1)
