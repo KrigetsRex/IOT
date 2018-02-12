@@ -40,20 +40,24 @@ int main(void)
   //MX_SPI3_Init();
   MX_USART1_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
+  //HAL_GPIO_WritePin(GPIOB, ISM43362_WAKEUP_Pin, GPIO_PIN_SET);
 
   /* Initialize Wi-Fi module */
-  stat = WIFI_Init();
   failed = (uint16_t)SPI_WIFI_Init();
-  HAL_GPIO_WritePin(GPIOB, ISM43362_WAKEUP_Pin, GPIO_PIN_SET);
+  stat = WIFI_Init();
+
 
   /* Read/Write */
-  HAL_SPI_Transmit(&hspi3, (uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
-  SPI_WIFI_Delay(10000);
+  /*HAL_SPI_Transmit(&hspi3, (uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
+  SPI_WIFI_Delay(1000);
   HAL_SPI_Receive(&hspi3, WIFI_return, XferSize, SPI_Timeout);
-
   failed = SPI_WIFI_SendData((uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
-  SPI_WIFI_Delay(10000);
+  SPI_WIFI_Delay(1000);
   failed = SPI_WIFI_ReceiveData(WIFI_return, XferSize, SPI_Timeout);
+  */
+  WIFI_APs_t APs[3];
+  stat = WIFI_ListAccessPoints(APs, (uint8_t)3);
+  //stat = WIFI_Connect("LukeAndMichelle","12102010",  WIFI_ECN_WEP);
 
   /* Infinite loop */
   while (1)
