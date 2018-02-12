@@ -47,10 +47,12 @@ int main(void)
   HAL_GPIO_WritePin(GPIOB, ISM43362_WAKEUP_Pin, GPIO_PIN_SET);
 
   /* Read/Write */
-  HAL_SPI_Transmit(&hspi3, (uint8_t *)"F0\r", (uint16_t)2, SPI_Timeout);
+  HAL_SPI_Transmit(&hspi3, (uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
+  SPI_WIFI_Delay(10000);
   HAL_SPI_Receive(&hspi3, WIFI_return, XferSize, SPI_Timeout);
 
-  failed = SPI_WIFI_SendData((uint8_t *)"F0\r", (uint16_t)2, SPI_Timeout);
+  failed = SPI_WIFI_SendData((uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
+  SPI_WIFI_Delay(10000);
   failed = SPI_WIFI_ReceiveData(WIFI_return, XferSize, SPI_Timeout);
 
   /* Infinite loop */
