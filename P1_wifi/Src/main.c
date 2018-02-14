@@ -11,9 +11,10 @@
 #include "wifi.h"
 
 /* Private variables ---------------------------------------------------------*/
-static uint16_t XferSize = 1000;
-static uint32_t SPI_Timeout = 1000;
+static uint16_t XferSize;
+static uint32_t Timeout = 10000;
 static uint8_t WIFI_return[1000];
+static uint8_t WIFI_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=7";
 static uint16_t failed;
 static WIFI_Status_t stat;
 
@@ -47,17 +48,25 @@ int main(void)
   stat = WIFI_Init();
 
 
-  /* Read/Write */
+  /* Debug Stuff */
   /*HAL_SPI_Transmit(&hspi3, (uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
   SPI_WIFI_Delay(1000);
   HAL_SPI_Receive(&hspi3, WIFI_return, XferSize, SPI_Timeout);
   failed = SPI_WIFI_SendData((uint8_t *)"F0", (uint16_t)2, SPI_Timeout);
   SPI_WIFI_Delay(1000);
   failed = SPI_WIFI_ReceiveData(WIFI_return, XferSize, SPI_Timeout);
+  WIFI_APs_t* APs;
+  stat = WIFI_ListAccessPoints(APs, (uint8_t)15);
   */
-  WIFI_APs_t APs[3];
-  stat = WIFI_ListAccessPoints(APs, (uint8_t)3);
-  //stat = WIFI_Connect("LukeAndMichelle","12102010",  WIFI_ECN_WEP);
+
+  //Connect to Access Point
+  stat = WIFI_Connect("LukeandMichelle","10122010",  WIFI_ECN_WPA2_PSK);
+  if (stat != WIFI_STATUS_OK){
+	  WIFI_Connect("iotclass","myiotclass",  WIFI_ECN_WPA2_PSK);
+  }
+
+  //send Data to Think Speak
+  WIFI_SendData((uint8_t)0, WIFI_xmit, sizeof(WIFI_xmit), &XferSize, Timeout);
 
   /* Infinite loop */
   while (1)
