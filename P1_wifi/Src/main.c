@@ -13,10 +13,20 @@
 /* Private variables ---------------------------------------------------------*/
 static uint16_t XferSize;
 static uint32_t Timeout = 10000;
-static uint8_t WIFI_return[1000];
 static uint8_t WIFI_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=7";
 static uint16_t failed;
 static WIFI_Status_t stat;
+const int channelID = 426930;
+const uint8_t writeAPIKey[] = "YF7HOW1VSKR4Y8H8"; // write API key for your ThingSpeak Channel
+const char* server = "api.thingspeak.com";
+uint8_t  IP_Addr[4] = {184,106,153,149};
+static uint8_t WIFI_connection[] = "POST /update HTTP/1.1\n"
+		                           "Host: api.thingspeak.com\n"
+								   "User-Agent: ESP8266 (nothans)/1.0\n"
+								   "Connection: close\n"
+								   "X-THINGSPEAKAPIKEY: YF7HOW1VSKR4Y8H8\n"
+								   "Content-Type: application/x-www-form-urlencoded\n"
+								   "Content-Length: 1\n\n1";
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -62,10 +72,14 @@ int main(void)
   //Connect to Access Point
   stat = WIFI_Connect("LukeandMichelle","10122010",  WIFI_ECN_WPA2_PSK);
   if (stat != WIFI_STATUS_OK){
-	  WIFI_Connect("iotclass","myiotclass",  WIFI_ECN_WPA2_PSK);
+	  stat = WIFI_Connect("iotclass","myiotclass",  WIFI_ECN_WPA2_PSK);
   }
 
   //send Data to Think Speak
+  //WIFI_StartServer(0, WIFI_TCP_PROTOCOL, "", 80);
+  //stat = WIFI_StartServer((uint32_t)0, WIFI_TCP_PROTOCOL, "", (uint32_t)80);
+  stat = WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
+  WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
   WIFI_SendData((uint8_t)0, WIFI_xmit, sizeof(WIFI_xmit), &XferSize, Timeout);
 
   /* Infinite loop */
