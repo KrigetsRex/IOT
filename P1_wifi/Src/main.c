@@ -13,7 +13,7 @@
 /* Private variables ---------------------------------------------------------*/
 static uint16_t XferSize;
 static uint32_t Timeout = 10000;
-static uint8_t WIFI_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=7";
+static uint8_t WIFI_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=15";
 static uint16_t failed;
 static WIFI_Status_t stat;
 const int channelID = 426930;
@@ -26,7 +26,7 @@ static uint8_t WIFI_connection[] = "POST /update HTTP/1.1\n"
 								   "Connection: close\n"
 								   "X-THINGSPEAKAPIKEY: YF7HOW1VSKR4Y8H8\n"
 								   "Content-Type: application/x-www-form-urlencoded\n"
-								   "Content-Length: 1\n\n1";
+								   "Content-Length: 1\n\n";
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -85,9 +85,10 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-
-
-  }
+   for (int i = 0; i < 2000; i++){
+   }
+   stat = WIFI_SendData((uint8_t)0, WIFI_xmit, sizeof(WIFI_xmit), &XferSize, Timeout);
+   }
 }
 
 /* notes
