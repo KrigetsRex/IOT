@@ -58,6 +58,7 @@ uint8_t DeltaY;
 uint8_t DeltaZ;
 static uint16_t XferSize;
 static uint32_t Timeout = 10000;
+static uint8_t WIFI_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8";
 static uint8_t WIFI_X_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=000";
 static uint8_t WIFI_Y_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field2=000";
 static uint8_t WIFI_Z_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field3=000";
@@ -121,9 +122,15 @@ int main(void)
 	  DeltaZ = abs_val(qDataXYZ[2] - pDataXYZ[2]);
 
 	  if (DeltaX > 20 | DeltaY > 20 | DeltaZ > 20){
+		  /*append_string(DeltaX, WIFI_X_xmit);
+		  append_string(DeltaY, WIFI_Y_xmit);
+		  append_string(DeltaZ, WIFI_Z_xmit);
 		  WIFI_SendData((uint8_t)0, WIFI_X_xmit, sizeof(WIFI_X_xmit), &XferSize, Timeout);
 		  WIFI_SendData((uint8_t)0, WIFI_Y_xmit, sizeof(WIFI_Y_xmit), &XferSize, Timeout);
 		  WIFI_SendData((uint8_t)0, WIFI_Z_xmit, sizeof(WIFI_Z_xmit), &XferSize, Timeout);
+		  */
+		  WIFI_xmit = WIFI_xmit + "&field1="+String(DeltaX)+"&field2="+String(DeltaY)+"&field3="+String(DeltaZ);
+		  WIFI_SendData((uint8_t)0, WIFI_xmit, sizeof(WIFI_xmit), &XferSize, Timeout);
 	  }
   }
 }
