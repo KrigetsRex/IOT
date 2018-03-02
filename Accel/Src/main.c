@@ -55,7 +55,7 @@ int16_t qDataXYZ[3] = {0};
 uint8_t DeltaX;
 uint8_t DeltaY;
 uint8_t DeltaZ;
-static uint8_t* WIFI_xmit;
+static char* WIFI_xmit[68];
 static uint8_t WIFI_X_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=000";
 static uint8_t WIFI_Y_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field2=000";
 static uint8_t WIFI_Z_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field3=000";

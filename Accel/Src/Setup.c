@@ -166,7 +166,7 @@ void append_string(uint8_t num, uint8_t* arr){
  * @param wifi_xmit: the string of fields to be updated
  */
 void thingSpeakUpdate(uint8_t* wifi_xmit){
-	static uint8_t* WIFI_connection;
+	static uint8_t* WIFI_connection[99];
 	sprintf(WIFI_connection, "POST /update HTTP/1.1\n"
 			                 "Host: api.thingspeak.com\n"
 							 "Connection: close\n"
