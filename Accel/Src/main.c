@@ -47,7 +47,6 @@
 #include "gpio.h"
 #include "stm32l475e_iot01_accelero.h"
 #include "stm32l4xx_hal.h"
-#include "wifi.h"
 #include "setup.h"
 
 /* Private variables ---------------------------------------------------------*/
@@ -56,9 +55,7 @@ int16_t qDataXYZ[3] = {0};
 uint8_t DeltaX;
 uint8_t DeltaY;
 uint8_t DeltaZ;
-static uint16_t XferSize;
-static uint32_t Timeout = 10000;
-static uint8_t WIFI_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8";
+static uint8_t* WIFI_xmit;
 static uint8_t WIFI_X_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field1=000";
 static uint8_t WIFI_Y_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field2=000";
 static uint8_t WIFI_Z_xmit[] = "https://api.thingspeak.com/update?api_key=YF7HOW1VSKR4Y8H8&field3=000";
@@ -66,13 +63,6 @@ static uint16_t failed;
 static WIFI_Status_t stat;
 const char* server = "api.thingspeak.com";
 uint8_t  IP_Addr[4] = {184,106,153,149};
-static uint8_t WIFI_connection[] = "POST /update HTTP/1.1\n"
-		                           "Host: api.thingspeak.com\n"
-								   "User-Agent: ESP8266 (nothans)/1.0\n"
-								   "Connection: close\n"
-								   "X-THINGSPEAKAPIKEY: YF7HOW1VSKR4Y8H8\n"
-								   "Content-Type: application/x-www-form-urlencoded\n"
-								   "Content-Length: 1\n\n";
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -112,7 +102,7 @@ int main(void)
 
   //Connect to ThingSpeak
   WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
-  WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
+  //WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
 
   while (1){
 	  BSP_ACCELERO_AccGetXYZ(pDataXYZ);
@@ -121,7 +111,7 @@ int main(void)
 	  DeltaY = abs_val(qDataXYZ[1] - pDataXYZ[1]);
 	  DeltaZ = abs_val(qDataXYZ[2] - pDataXYZ[2]);
 
-	  if (DeltaX > 20 | DeltaY > 20 | DeltaZ > 20){
+	  if ((DeltaX > 20) | (DeltaY > 20) | (DeltaZ > 20)){
 		  /*append_string(DeltaX, WIFI_X_xmit);
 		  append_string(DeltaY, WIFI_Y_xmit);
 		  append_string(DeltaZ, WIFI_Z_xmit);
@@ -129,8 +119,8 @@ int main(void)
 		  WIFI_SendData((uint8_t)0, WIFI_Y_xmit, sizeof(WIFI_Y_xmit), &XferSize, Timeout);
 		  WIFI_SendData((uint8_t)0, WIFI_Z_xmit, sizeof(WIFI_Z_xmit), &XferSize, Timeout);
 		  */
-		  WIFI_xmit = WIFI_xmit + "&field1="+String(DeltaX)+"&field2="+String(DeltaY)+"&field3="+String(DeltaZ);
-		  WIFI_SendData((uint8_t)0, WIFI_xmit, sizeof(WIFI_xmit), &XferSize, Timeout);
+		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u", DeltaX,DeltaY,DeltaZ);
+		  thingSpeakUpdate(WIFI_xmit);
 	  }
   }
 }

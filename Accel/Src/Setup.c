@@ -162,4 +162,18 @@ void append_string(uint8_t num, uint8_t* arr){
 	arr[lastIndex-2] = 48 + hundo;
 }
 
+/*send 3 fields to Thingspeak
+ * @param wifi_xmit: the string of fields to be updated
+ */
+void thingSpeakUpdate(uint8_t* wifi_xmit){
+	static uint8_t* WIFI_connection;
+	sprintf(WIFI_connection, "POST /update HTTP/1.1\n"
+			                 "Host: api.thingspeak.com\n"
+							 "Connection: close\n"
+							 "X-THINGSPEAKAPIKEY: YF7HOW1VSKR4Y8H8\n"
+							 "Content-Type: application/x-www-form-urlencoded\n"
+							 "Content-Length: %d\n\n", sizeof(wifi_xmit));
+	sprintf(WIFI_connection, wifi_xmit);
+	WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
+}
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
