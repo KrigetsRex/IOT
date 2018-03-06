@@ -55,10 +55,12 @@ int16_t qDataXYZ[3] = {0};
 uint8_t DeltaX;
 uint8_t DeltaY;
 uint8_t DeltaZ;
-static uint8_t WIFI_xmit[33];
+static uint8_t WIFI_xmit[68];
 static WIFI_Status_t stat;
 const char* server = "api.thingspeak.com";
 uint8_t  IP_Addr[4] = {184,106,153,149};
+float press_value = 0;
+float temp_value = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -87,6 +89,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   BSP_ACCELERO_Init();
+  BSP_PSENSOR_Init();
+  BSP_TSENSOR_Init();
   SPI_WIFI_Init();
   WIFI_Init();
 
@@ -108,14 +112,10 @@ int main(void)
 	  DeltaZ = abs_val(qDataXYZ[2] - pDataXYZ[2]);
 
 	  if ((DeltaX > 20) | (DeltaY > 20) | (DeltaZ > 20)){
-		  /*append_string(DeltaX, WIFI_X_xmit);
-		  append_string(DeltaY, WIFI_Y_xmit);
-		  append_string(DeltaZ, WIFI_Z_xmit);
-		  WIFI_SendData((uint8_t)0, WIFI_X_xmit, sizeof(WIFI_X_xmit), &XferSize, Timeout);
-		  WIFI_SendData((uint8_t)0, WIFI_Y_xmit, sizeof(WIFI_Y_xmit), &XferSize, Timeout);
-		  WIFI_SendData((uint8_t)0, WIFI_Z_xmit, sizeof(WIFI_Z_xmit), &XferSize, Timeout);
-		  */
-		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u", DeltaX,DeltaY,DeltaZ);
+		  press_value = BSP_PSENSOR_ReadPressure();
+		  temp_value = BSP_TSENSOR_ReadTemp();
+		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u&field4=%.2f&field5=%.2f",
+		  DeltaX, DeltaY, DeltaZ, temp_value, press_value);
 		  thingSpeakUpdate(WIFI_xmit);
 	  }
   }
