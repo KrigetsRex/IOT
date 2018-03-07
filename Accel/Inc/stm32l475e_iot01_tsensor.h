@@ -97,7 +97,7 @@ typedef enum
 /* Exported functions --------------------------------------------------------*/
 /* Sensor Configuration Functions */
 uint32_t BSP_TSENSOR_Init(void);
-float BSP_TSENSOR_ReadTemp(void);
+void BSP_TSENSOR_ReadTemp(float* tmp);
 /**
   * @}
   */ 

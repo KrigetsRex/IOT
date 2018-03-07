@@ -113,7 +113,7 @@ int main(void)
 
 	  if ((DeltaX > 20) | (DeltaY > 20) | (DeltaZ > 20)){
 		  press_value = BSP_PSENSOR_ReadPressure();
-		  temp_value = BSP_TSENSOR_ReadTemp();
+		  BSP_TSENSOR_ReadTemp(&temp_value);
 		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u&field4=%.2f&field5=%.2f",
 		  DeltaX, DeltaY, DeltaZ, temp_value, press_value);
 		  thingSpeakUpdate(WIFI_xmit);

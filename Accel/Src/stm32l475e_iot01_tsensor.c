@@ -99,9 +99,9 @@ uint32_t BSP_TSENSOR_Init(void)
   * @brief  Read Temperature register of TS751.
   * @retval STTS751 measured temperature value.
   */
-float BSP_TSENSOR_ReadTemp(void)
+void BSP_TSENSOR_ReadTemp(float* tmp)
 { 
-  return tsensor_drv->ReadTemp(TSENSOR_I2C_ADDRESS);
+  *tmp = tsensor_drv->ReadTemp(TSENSOR_I2C_ADDRESS);
 }
 
 /**
