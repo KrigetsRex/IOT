@@ -116,7 +116,10 @@ int main(void)
 		  BSP_TSENSOR_ReadTemp(&temp_value);
 		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u&field4=%.2f&field5=%.2f",
 		  DeltaX, DeltaY, DeltaZ, temp_value, press_value);
+		  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
 		  thingSpeakUpdate(WIFI_xmit);
+		  WIFI_CloseClientConnection(0);
+		  HAL_Delay(15000);
 	  }
   }
 }
