@@ -27,4 +27,23 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 static uint16_t XferSize;
 static uint32_t Timeout = 10000;
 
+//modes of operation
+#define ALL_OFF 0
+#define WINDOW_COOL 1
+#define WINDOW_HEAT 2
+#define AC_ON 3
+#define FURNACE_ON 4
+
+//error numbers
+#define NO_ERROR 0
+#define WINDOW_NOT_CLOSED 1
+#define WINDOW_NOT_OPEN 2
+#define WINDOW_UNK 3
+#define FURNACE_NOT_OFF 4
+#define FURNACE_NOT_ON 5
+#define FURNACE_UNK 6
+#define AC_NOT_OFF 7
+#define AC_NOT_ON 8
+#define AC_UNK 9
+
 #endif /* SETUP_H_ */

@@ -46,6 +46,8 @@
 #include "usb_otg.h"
 #include "gpio.h"
 #include "stm32l475e_iot01_accelero.h"
+#include "stm32l475e_iot01_psensor.h"
+#include "stm32l475e_iot01_tsensor.h"
 #include "stm32l4xx_hal.h"
 #include "setup.h"
 

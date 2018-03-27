@@ -45,22 +45,19 @@
 #include "usart.h"
 #include "usb_otg.h"
 #include "gpio.h"
-#include "stm32l475e_iot01_accelero.h"
+#include "stm32l475e_iot01_tsensor.h"
 #include "stm32l4xx_hal.h"
 #include "setup.h"
 
 /* Private variables ---------------------------------------------------------*/
-int16_t pDataXYZ[3] = {0};
-int16_t qDataXYZ[3] = {0};
-uint8_t DeltaX;
-uint8_t DeltaY;
-uint8_t DeltaZ;
 static uint8_t WIFI_xmit[68];
 static WIFI_Status_t stat;
 const char* server = "api.thingspeak.com";
 uint8_t  IP_Addr[4] = {184,106,153,149};
-float press_value = 0;
-float temp_value = 0;
+float ext_temp = 0;
+float int_temp = 0;
+uint8_t mode = 0;
+uint8_t errorNum = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 
@@ -88,8 +85,6 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
-  BSP_ACCELERO_Init();
-  BSP_PSENSOR_Init();
   BSP_TSENSOR_Init();
   SPI_WIFI_Init();
   WIFI_Init();
@@ -105,21 +100,12 @@ int main(void)
   //WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
 
   while (1){
-	  BSP_ACCELERO_AccGetXYZ(pDataXYZ);
-	  BSP_ACCELERO_AccGetXYZ(qDataXYZ);
-	  DeltaX = abs_val(qDataXYZ[0] - pDataXYZ[0]);
-	  DeltaY = abs_val(qDataXYZ[1] - pDataXYZ[1]);
-	  DeltaZ = abs_val(qDataXYZ[2] - pDataXYZ[2]);
-
-	  if ((DeltaX > 20) | (DeltaY > 20) | (DeltaZ > 20)){
-		  press_value = BSP_PSENSOR_ReadPressure();
-		  BSP_TSENSOR_ReadTemp(&temp_value);
-		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u&field4=%.2f&field5=%.2f",
-		  DeltaX, DeltaY, DeltaZ, temp_value, press_value);
-		  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
-		  thingSpeakUpdate(WIFI_xmit);
-		  WIFI_CloseClientConnection(0);
-		  HAL_Delay(15000);
-	  }
+	  BSP_TSENSOR_ReadTemp(&int_temp);
+	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%.2f&field4=%u",
+	  mode, int_temp, ext_temp, errorNum);
+	  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
+	  thingSpeakUpdate(WIFI_xmit);
+	  WIFI_CloseClientConnection(0);
+	  HAL_Delay(15000);
   }
 }
