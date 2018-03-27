@@ -1,0 +1,29 @@
+void ThingSpeakUpdate(String tsData){
+
+  if(client.connect("api.thingspeak.com", 80)){
+   client.print("POST /update HTTP/1.1\n");
+        client.print("Host: api.thingspeak.com\n");
+        client.print("Connection: close\n");
+        client.print("X-THINGSPEAKAPIKEY: "+writeAPIKey+"\n");
+        client.print("Content-Type: application/x-www-form-urlencoded\n");
+        client.print("Content-Length: ");
+        client.print(tsData.length());
+        client.print("\n\n");
+        
+        client.println(tsData); //the ""ln" is important here.
+
+	// This delay is pivitol without it the TCP client will often close before the data is fully sent
+        delay(200);
+  }
+  else{
+   //failed to connect to ThingSpeak
+  }
+}
+
+	NOTE:
+	tsdata = 
+        	field1="+String(x)+"&field2="+String(y)
+	
+	OR
+	sprintf(tsdata, field1=%0.1f&field2=%0.1f", x, y);
+	ThingSpeakUpdate(tsData);
