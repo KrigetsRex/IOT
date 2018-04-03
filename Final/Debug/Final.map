@@ -73,6 +73,7 @@ huart1              0x78              Src\Setup.o
 QSPIHandle          0x44              Drivers\BSP\stm32l475e_iot01_qspi.o
 hI2cHandler         0x4c              Drivers\BSP\stm32l475e_iot01.o
 EsWifiObj           0x768             Src\wifi.o
+hspi1               0x64              Src\spi.o
 hspi                0x64              Src\es_wifi_io.o
 hqspi               0x44              Src\quadspi.o
 
@@ -1606,6 +1607,18 @@ Discarded input sections
  .text          0x00000000        0x0 Src\main.o
  .data          0x00000000        0x0 Src\main.o
  .bss           0x00000000        0x0 Src\main.o
+ .text.openWindow
+                0x00000000       0x28 Src\main.o
+ .text.closeWindow
+                0x00000000       0x28 Src\main.o
+ .text.furnaceON
+                0x00000000       0x10 Src\main.o
+ .text.furnaceOFF
+                0x00000000       0x10 Src\main.o
+ .text.acON     0x00000000       0x10 Src\main.o
+ .text.acOFF    0x00000000       0x10 Src\main.o
+ .text.getExtTemp
+                0x00000000       0x24 Src\main.o
  .text          0x00000000        0x0 Src\quadspi.o
  .data          0x00000000        0x0 Src\quadspi.o
  .bss           0x00000000        0x0 Src\quadspi.o
@@ -1616,8 +1629,11 @@ Discarded input sections
  .bss           0x00000000        0x0 Src\spi.o
  .text.MX_SPI3_Init
                 0x00000000       0x54 Src\spi.o
+ .text.MX_SPI1_Init
+                0x00000000       0x54 Src\spi.o
  .rodata.MX_SPI3_Init.str1.1
                 0x00000000        0xd Src\spi.o
+ COMMON         0x00000000       0x64 Src\spi.o
  .text          0x00000000        0x0 Src\stm32l475e_iot01_psensor.o
  .data          0x00000000        0x0 Src\stm32l475e_iot01_psensor.o
  .bss           0x00000000        0x0 Src\stm32l475e_iot01_psensor.o
@@ -2848,7 +2864,7 @@ LOAD c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib
                 0x00000d56       0x22 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu/crtn.o
 OUTPUT(Final.elf elf32-littlearm)
 
-.debug_info     0x00000000    0x34afa
+.debug_info     0x00000000    0x34e53
  .debug_info    0x00000000     0x29f5 Drivers\BSP\stm32l475e_iot01.o
  .debug_info    0x000029f5      0x659 Drivers\Components\hts221\hts221.o
  .debug_info    0x0000304e     0x12fb Drivers\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal.o
@@ -2873,19 +2889,19 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_info    0x00024f85     0x1947 Src\es_wifi_io.o
  .debug_info    0x000268cc     0x128b Src\gpio.o
  .debug_info    0x00027b57     0x1335 Src\i2c.o
- .debug_info    0x00028e8c     0x223e Src\main.o
- .debug_info    0x0002b0ca     0x121a Src\quadspi.o
- .debug_info    0x0002c2e4     0x125b Src\spi.o
- .debug_info    0x0002d53f      0xb9e Src\stm32l475e_iot01_tsensor.o
- .debug_info    0x0002e0dd      0xebe Src\stm32l4xx_hal_msp.o
- .debug_info    0x0002ef9b      0xb04 Src\stm32l4xx_it.o
- .debug_info    0x0002fa9f      0xdd5 Src\system_stm32l4xx.o
- .debug_info    0x00030874     0x1390 Src\usart.o
- .debug_info    0x00031c04     0x1338 Src\usb_otg.o
- .debug_info    0x00032f3c     0x1b44 Src\wifi.o
- .debug_info    0x00034a80       0x7a startup\startup_stm32l475xx.o
+ .debug_info    0x00028e8c     0x2539 Src\main.o
+ .debug_info    0x0002b3c5     0x121a Src\quadspi.o
+ .debug_info    0x0002c5df     0x12b9 Src\spi.o
+ .debug_info    0x0002d898      0xb9e Src\stm32l475e_iot01_tsensor.o
+ .debug_info    0x0002e436      0xebe Src\stm32l4xx_hal_msp.o
+ .debug_info    0x0002f2f4      0xb04 Src\stm32l4xx_it.o
+ .debug_info    0x0002fdf8      0xdd5 Src\system_stm32l4xx.o
+ .debug_info    0x00030bcd     0x1390 Src\usart.o
+ .debug_info    0x00031f5d     0x1338 Src\usb_otg.o
+ .debug_info    0x00033295     0x1b44 Src\wifi.o
+ .debug_info    0x00034dd9       0x7a startup\startup_stm32l475xx.o
 
-.debug_abbrev   0x00000000     0x5c84
+.debug_abbrev   0x00000000     0x5cdc
  .debug_abbrev  0x00000000      0x41a Drivers\BSP\stm32l475e_iot01.o
  .debug_abbrev  0x0000041a      0x176 Drivers\Components\hts221\hts221.o
  .debug_abbrev  0x00000590      0x2c9 Drivers\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal.o
@@ -2910,17 +2926,17 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_abbrev  0x00003f06      0x32e Src\es_wifi_io.o
  .debug_abbrev  0x00004234      0x200 Src\gpio.o
  .debug_abbrev  0x00004434      0x229 Src\i2c.o
- .debug_abbrev  0x0000465d      0x264 Src\main.o
- .debug_abbrev  0x000048c1      0x227 Src\quadspi.o
- .debug_abbrev  0x00004ae8      0x227 Src\spi.o
- .debug_abbrev  0x00004d0f      0x20c Src\stm32l475e_iot01_tsensor.o
- .debug_abbrev  0x00004f1b      0x1f5 Src\stm32l4xx_hal_msp.o
- .debug_abbrev  0x00005110      0x213 Src\stm32l4xx_it.o
- .debug_abbrev  0x00005323      0x1eb Src\system_stm32l4xx.o
- .debug_abbrev  0x0000550e      0x235 Src\usart.o
- .debug_abbrev  0x00005743      0x264 Src\usb_otg.o
- .debug_abbrev  0x000059a7      0x2cb Src\wifi.o
- .debug_abbrev  0x00005c72       0x12 startup\startup_stm32l475xx.o
+ .debug_abbrev  0x0000465d      0x2bc Src\main.o
+ .debug_abbrev  0x00004919      0x227 Src\quadspi.o
+ .debug_abbrev  0x00004b40      0x227 Src\spi.o
+ .debug_abbrev  0x00004d67      0x20c Src\stm32l475e_iot01_tsensor.o
+ .debug_abbrev  0x00004f73      0x1f5 Src\stm32l4xx_hal_msp.o
+ .debug_abbrev  0x00005168      0x213 Src\stm32l4xx_it.o
+ .debug_abbrev  0x0000537b      0x1eb Src\system_stm32l4xx.o
+ .debug_abbrev  0x00005566      0x235 Src\usart.o
+ .debug_abbrev  0x0000579b      0x264 Src\usb_otg.o
+ .debug_abbrev  0x000059ff      0x2cb Src\wifi.o
+ .debug_abbrev  0x00005cca       0x12 startup\startup_stm32l475xx.o
 
 .debug_loc      0x00000000    0x10d2a
  .debug_loc     0x00000000      0x9c8 Drivers\BSP\stm32l475e_iot01.o
@@ -2954,7 +2970,7 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_loc     0x000102a2       0x42 Src\usb_otg.o
  .debug_loc     0x000102e4      0xa46 Src\wifi.o
 
-.debug_aranges  0x00000000     0x15d8
+.debug_aranges  0x00000000     0x1618
  .debug_aranges
                 0x00000000       0xe8 Drivers\BSP\stm32l475e_iot01.o
  .debug_aranges
@@ -3004,29 +3020,29 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_aranges
                 0x00001300       0x30 Src\i2c.o
  .debug_aranges
-                0x00001330       0x20 Src\main.o
+                0x00001330       0x58 Src\main.o
  .debug_aranges
-                0x00001350       0x30 Src\quadspi.o
+                0x00001388       0x30 Src\quadspi.o
  .debug_aranges
-                0x00001380       0x30 Src\spi.o
+                0x000013b8       0x38 Src\spi.o
  .debug_aranges
-                0x000013b0       0x28 Src\stm32l475e_iot01_tsensor.o
+                0x000013f0       0x28 Src\stm32l475e_iot01_tsensor.o
  .debug_aranges
-                0x000013d8       0x20 Src\stm32l4xx_hal_msp.o
+                0x00001418       0x20 Src\stm32l4xx_hal_msp.o
  .debug_aranges
-                0x000013f8       0x58 Src\stm32l4xx_it.o
+                0x00001438       0x58 Src\stm32l4xx_it.o
  .debug_aranges
-                0x00001450       0x28 Src\system_stm32l4xx.o
+                0x00001490       0x28 Src\system_stm32l4xx.o
  .debug_aranges
-                0x00001478       0x38 Src\usart.o
+                0x000014b8       0x38 Src\usart.o
  .debug_aranges
-                0x000014b0       0x30 Src\usb_otg.o
+                0x000014f0       0x30 Src\usb_otg.o
  .debug_aranges
-                0x000014e0       0xd0 Src\wifi.o
+                0x00001520       0xd0 Src\wifi.o
  .debug_aranges
-                0x000015b0       0x28 startup\startup_stm32l475xx.o
+                0x000015f0       0x28 startup\startup_stm32l475xx.o
 
-.debug_ranges   0x00000000     0x1a00
+.debug_ranges   0x00000000     0x1a40
  .debug_ranges  0x00000000      0x190 Drivers\BSP\stm32l475e_iot01.o
  .debug_ranges  0x00000190       0x30 Drivers\Components\hts221\hts221.o
  .debug_ranges  0x000001c0      0x100 Drivers\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal.o
@@ -3051,19 +3067,19 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_ranges  0x00001658       0x80 Src\es_wifi_io.o
  .debug_ranges  0x000016d8       0x50 Src\gpio.o
  .debug_ranges  0x00001728       0x20 Src\i2c.o
- .debug_ranges  0x00001748       0x10 Src\main.o
- .debug_ranges  0x00001758       0x40 Src\quadspi.o
- .debug_ranges  0x00001798       0x40 Src\spi.o
- .debug_ranges  0x000017d8       0x18 Src\stm32l475e_iot01_tsensor.o
- .debug_ranges  0x000017f0       0x40 Src\stm32l4xx_hal_msp.o
- .debug_ranges  0x00001830       0x48 Src\stm32l4xx_it.o
- .debug_ranges  0x00001878       0x18 Src\system_stm32l4xx.o
- .debug_ranges  0x00001890       0x58 Src\usart.o
- .debug_ranges  0x000018e8       0x38 Src\usb_otg.o
- .debug_ranges  0x00001920       0xc0 Src\wifi.o
- .debug_ranges  0x000019e0       0x20 startup\startup_stm32l475xx.o
+ .debug_ranges  0x00001748       0x48 Src\main.o
+ .debug_ranges  0x00001790       0x40 Src\quadspi.o
+ .debug_ranges  0x000017d0       0x48 Src\spi.o
+ .debug_ranges  0x00001818       0x18 Src\stm32l475e_iot01_tsensor.o
+ .debug_ranges  0x00001830       0x40 Src\stm32l4xx_hal_msp.o
+ .debug_ranges  0x00001870       0x48 Src\stm32l4xx_it.o
+ .debug_ranges  0x000018b8       0x18 Src\system_stm32l4xx.o
+ .debug_ranges  0x000018d0       0x58 Src\usart.o
+ .debug_ranges  0x00001928       0x38 Src\usb_otg.o
+ .debug_ranges  0x00001960       0xc0 Src\wifi.o
+ .debug_ranges  0x00001a20       0x20 startup\startup_stm32l475xx.o
 
-.debug_line     0x00000000     0xc6ea
+.debug_line     0x00000000     0xc7b4
  .debug_line    0x00000000      0x61d Drivers\BSP\stm32l475e_iot01.o
  .debug_line    0x0000061d      0x219 Drivers\Components\hts221\hts221.o
  .debug_line    0x00000836      0x4e5 Drivers\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal.o
@@ -3086,21 +3102,21 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_line    0x00008f35      0x31a Src\dfsdm.o
  .debug_line    0x0000924f      0x7b0 Src\es_wifi.o
  .debug_line    0x000099ff      0x420 Src\es_wifi_io.o
- .debug_line    0x00009e1f      0x32a Src\gpio.o
- .debug_line    0x0000a149      0x31f Src\i2c.o
- .debug_line    0x0000a468      0x521 Src\main.o
- .debug_line    0x0000a989      0x317 Src\quadspi.o
- .debug_line    0x0000aca0      0x313 Src\spi.o
- .debug_line    0x0000afb3      0x326 Src\stm32l475e_iot01_tsensor.o
- .debug_line    0x0000b2d9      0x288 Src\stm32l4xx_hal_msp.o
- .debug_line    0x0000b561      0x310 Src\stm32l4xx_it.o
- .debug_line    0x0000b871      0x2a2 Src\system_stm32l4xx.o
- .debug_line    0x0000bb13      0x34f Src\usart.o
- .debug_line    0x0000be62      0x354 Src\usb_otg.o
- .debug_line    0x0000c1b6      0x4b5 Src\wifi.o
- .debug_line    0x0000c66b       0x7f startup\startup_stm32l475xx.o
+ .debug_line    0x00009e1f      0x334 Src\gpio.o
+ .debug_line    0x0000a153      0x31f Src\i2c.o
+ .debug_line    0x0000a472      0x5b9 Src\main.o
+ .debug_line    0x0000aa2b      0x317 Src\quadspi.o
+ .debug_line    0x0000ad42      0x33b Src\spi.o
+ .debug_line    0x0000b07d      0x326 Src\stm32l475e_iot01_tsensor.o
+ .debug_line    0x0000b3a3      0x288 Src\stm32l4xx_hal_msp.o
+ .debug_line    0x0000b62b      0x310 Src\stm32l4xx_it.o
+ .debug_line    0x0000b93b      0x2a2 Src\system_stm32l4xx.o
+ .debug_line    0x0000bbdd      0x34f Src\usart.o
+ .debug_line    0x0000bf2c      0x354 Src\usb_otg.o
+ .debug_line    0x0000c280      0x4b5 Src\wifi.o
+ .debug_line    0x0000c735       0x7f startup\startup_stm32l475xx.o
 
-.debug_str      0x00000000     0x7b4e
+.debug_str      0x00000000     0x7bad
  .debug_str     0x00000000     0x1855 Drivers\BSP\stm32l475e_iot01.o
                                0x19d2 (size before relaxing)
  .debug_str     0x00001855      0x1e6 Drivers\Components\hts221\hts221.o
@@ -3149,25 +3165,25 @@ OUTPUT(Final.elf elf32-littlearm)
                                 0xd62 (size before relaxing)
  .debug_str     0x000075e5       0x2a Src\i2c.o
                                 0xd79 (size before relaxing)
- .debug_str     0x0000760f      0x1af Src\main.o
-                               0x1a23 (size before relaxing)
- .debug_str     0x000077be       0x1c Src\quadspi.o
+ .debug_str     0x0000760f      0x201 Src\main.o
+                               0x1aef (size before relaxing)
+ .debug_str     0x00007810       0x1c Src\quadspi.o
                                 0xc83 (size before relaxing)
- .debug_str     0x000077da       0x1a Src\spi.o
-                                0xc7a (size before relaxing)
- .debug_str     0x000077f4       0x47 Src\stm32l475e_iot01_tsensor.o
+ .debug_str     0x0000782c       0x27 Src\spi.o
+                                0xc8d (size before relaxing)
+ .debug_str     0x00007853       0x47 Src\stm32l475e_iot01_tsensor.o
                                 0x7ca (size before relaxing)
- .debug_str     0x0000783b       0x1b Src\stm32l4xx_hal_msp.o
+ .debug_str     0x0000789a       0x1b Src\stm32l4xx_hal_msp.o
                                 0xcb6 (size before relaxing)
- .debug_str     0x00007856       0xce Src\stm32l4xx_it.o
+ .debug_str     0x000078b5       0xce Src\stm32l4xx_it.o
                                 0x753 (size before relaxing)
- .debug_str     0x00007924       0x3b Src\system_stm32l4xx.o
+ .debug_str     0x00007983       0x3b Src\system_stm32l4xx.o
                                 0x837 (size before relaxing)
- .debug_str     0x0000795f       0x1a Src\usart.o
+ .debug_str     0x000079be       0x1a Src\usart.o
                                 0xd48 (size before relaxing)
- .debug_str     0x00007979       0x1b Src\usb_otg.o
+ .debug_str     0x000079d8       0x1b Src\usb_otg.o
                                 0xcd3 (size before relaxing)
- .debug_str     0x00007994      0x1ba Src\wifi.o
+ .debug_str     0x000079f3      0x1ba Src\wifi.o
                                0x108b (size before relaxing)
 
 .comment        0x00000000       0x7c
@@ -3207,7 +3223,7 @@ OUTPUT(Final.elf elf32-littlearm)
  .comment       0x0000007c       0x7d Src\usb_otg.o
  .comment       0x0000007c       0x7d Src\wifi.o
 
-.debug_frame    0x00000000     0x4628
+.debug_frame    0x00000000     0x46d8
  .debug_frame   0x00000000      0x2d4 Drivers\BSP\stm32l475e_iot01.o
  .debug_frame   0x000002d4       0xb0 Drivers\Components\hts221\hts221.o
  .debug_frame   0x00000384      0x240 Drivers\STM32L4xx_HAL_Driver\Src\stm32l4xx_hal.o
@@ -3232,37 +3248,37 @@ OUTPUT(Final.elf elf32-littlearm)
  .debug_frame   0x0000394c       0xd4 Src\es_wifi_io.o
  .debug_frame   0x00003a20       0x40 Src\gpio.o
  .debug_frame   0x00003a60       0x58 Src\i2c.o
- .debug_frame   0x00003ab8       0x28 Src\main.o
- .debug_frame   0x00003ae0       0x58 Src\quadspi.o
- .debug_frame   0x00003b38       0x58 Src\spi.o
- .debug_frame   0x00003b90       0x40 Src\stm32l475e_iot01_tsensor.o
- .debug_frame   0x00003bd0       0x2c Src\stm32l4xx_hal_msp.o
- .debug_frame   0x00003bfc       0xe4 Src\stm32l4xx_it.o
- .debug_frame   0x00003ce0       0x38 Src\system_stm32l4xx.o
- .debug_frame   0x00003d18       0x80 Src\usart.o
- .debug_frame   0x00003d98       0x70 Src\usb_otg.o
- .debug_frame   0x00003e08      0x25c Src\wifi.o
- .debug_frame   0x00004064       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-init.o)
- .debug_frame   0x00004090       0x28 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-memcpy-stub.o)
- .debug_frame   0x000040b8       0x70 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-sprintf.o)
- .debug_frame   0x00004128       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strchr.o)
- .debug_frame   0x00004148       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strcpy.o)
- .debug_frame   0x00004168       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strncpy.o)
- .debug_frame   0x00004194       0x30 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strstr.o)
- .debug_frame   0x000041c4       0x38 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strtok.o)
- .debug_frame   0x000041fc       0x40 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strtok_r.o)
- .debug_frame   0x0000423c       0x30 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-malloc.o)
- .debug_frame   0x0000426c       0x38 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-freer.o)
- .debug_frame   0x000042a4       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-mallocr.o)
- .debug_frame   0x000042d0       0x90 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-svfprintf.o)
- .debug_frame   0x00004360       0x60 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-vfprintf_i.o)
- .debug_frame   0x000043c0       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-sbrkr.o)
- .debug_frame   0x000043ec       0x28 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-memmove.o)
- .debug_frame   0x00004414       0x30 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-mlock.o)
- .debug_frame   0x00004444       0x3c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-reallocr.o)
- .debug_frame   0x00004480       0x5c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-reent.o)
- .debug_frame   0x000044dc       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-msizer.o)
- .debug_frame   0x000044fc       0xac c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu\libgcc.a(_arm_addsubdf3.o)
- .debug_frame   0x000045a8       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu\libgcc.a(_aeabi_uldivmod.o)
- .debug_frame   0x000045d4       0x34 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu\libgcc.a(_udivmoddi4.o)
- .debug_frame   0x00004608       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libnosys.a(sbrk.o)
+ .debug_frame   0x00003ab8       0xb8 Src\main.o
+ .debug_frame   0x00003b70       0x58 Src\quadspi.o
+ .debug_frame   0x00003bc8       0x78 Src\spi.o
+ .debug_frame   0x00003c40       0x40 Src\stm32l475e_iot01_tsensor.o
+ .debug_frame   0x00003c80       0x2c Src\stm32l4xx_hal_msp.o
+ .debug_frame   0x00003cac       0xe4 Src\stm32l4xx_it.o
+ .debug_frame   0x00003d90       0x38 Src\system_stm32l4xx.o
+ .debug_frame   0x00003dc8       0x80 Src\usart.o
+ .debug_frame   0x00003e48       0x70 Src\usb_otg.o
+ .debug_frame   0x00003eb8      0x25c Src\wifi.o
+ .debug_frame   0x00004114       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x00004140       0x28 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-memcpy-stub.o)
+ .debug_frame   0x00004168       0x70 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-sprintf.o)
+ .debug_frame   0x000041d8       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strchr.o)
+ .debug_frame   0x000041f8       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strcpy.o)
+ .debug_frame   0x00004218       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strncpy.o)
+ .debug_frame   0x00004244       0x30 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strstr.o)
+ .debug_frame   0x00004274       0x38 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strtok.o)
+ .debug_frame   0x000042ac       0x40 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-strtok_r.o)
+ .debug_frame   0x000042ec       0x30 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-malloc.o)
+ .debug_frame   0x0000431c       0x38 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-freer.o)
+ .debug_frame   0x00004354       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-mallocr.o)
+ .debug_frame   0x00004380       0x90 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-svfprintf.o)
+ .debug_frame   0x00004410       0x60 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-vfprintf_i.o)
+ .debug_frame   0x00004470       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-sbrkr.o)
+ .debug_frame   0x0000449c       0x28 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-memmove.o)
+ .debug_frame   0x000044c4       0x30 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-mlock.o)
+ .debug_frame   0x000044f4       0x3c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-reallocr.o)
+ .debug_frame   0x00004530       0x5c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-reent.o)
+ .debug_frame   0x0000458c       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libc_nano.a(lib_a-nano-msizer.o)
+ .debug_frame   0x000045ac       0xac c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu\libgcc.a(_arm_addsubdf3.o)
+ .debug_frame   0x00004658       0x2c c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu\libgcc.a(_aeabi_uldivmod.o)
+ .debug_frame   0x00004684       0x34 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/armv7e-m/fpu\libgcc.a(_udivmoddi4.o)
+ .debug_frame   0x000046b8       0x20 c:/program files (x86)/atollic/truestudio for arm 8.1.0/armtools/bin/../lib/gcc/arm-atollic-eabi/6.3.1/../../../../arm-atollic-eabi/lib/armv7e-m/fpu\libnosys.a(sbrk.o)

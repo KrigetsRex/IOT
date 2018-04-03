@@ -1,0 +1,18 @@
+IOT final notes
+
+relays
+  one normally open
+  the other normally closed
+  need to set PC-4 and PC-5 as outputs
+  pc-4 goes to a0,  pc-5 to a1  on cn2
+
+actuator
+  set pc-3 as output(a2), 1ms pulse to extend
+                          2ms pulse to retract
+
+ext temp sensor  --check
+  setup spi1 for UEXT connector
+  pa5(d13 on CN1) SCK
+  pa6(d12 on CN1) MISO
+  pa7(d11 on CN1) MOSI
+  pa2(d10 on CN1) NSS  ??

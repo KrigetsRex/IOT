@@ -59,10 +59,45 @@ float int_temp = 0;
 uint8_t mode = 0;
 uint8_t errorNum = 0;
 
-/* Private function prototypes -----------------------------------------------*/
+/* Private functions -----------------------------------------------*/
+void openWindow(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+	HAL_delay(1);
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+}
+
+void closeWindow(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+	HAL_delay(2);
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+}
+
+void furnaceON(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A0_Pin,GPIO_PIN_SET);
+}
+
+void furnaceOFF(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A0_Pin,GPIO_PIN_RESET);
+}
+
+void acON(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_RESET);
+}
+
+void acOFF(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_SET);
+}
+
+uint16_t getExtTemp(){
+	uint16_t temp = -1;
+	HAL_SPI_Receive(&hspi1, &temp, 12, 1);
+	return temp;
+}
 
 /**
-  * @breif: start wifi and upload accelerometer data if bump detected
+  * @breif: main function which sets up peripherals and periodically
+  * monitors the internal and external temp and performs the appropriate
+  * action as required
   *
   * @retval None
   */

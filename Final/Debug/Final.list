@@ -23,23 +23,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   9 .ARM.attributes 00000030  00000000  00000000  00020080  2**0
                   CONTENTS, READONLY
- 10 .debug_info   00034afa  00000000  00000000  000200b0  2**0
+ 10 .debug_info   00034e53  00000000  00000000  000200b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_abbrev 00005c84  00000000  00000000  00054baa  2**0
+ 11 .debug_abbrev 00005cdc  00000000  00000000  00054f03  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00010d2a  00000000  00000000  0005a82e  2**0
+ 12 .debug_loc    00010d2a  00000000  00000000  0005abdf  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_aranges 000015d8  00000000  00000000  0006b558  2**3
+ 13 .debug_aranges 00001618  00000000  00000000  0006b910  2**3
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00001a00  00000000  00000000  0006cb30  2**3
+ 14 .debug_ranges 00001a40  00000000  00000000  0006cf28  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_line   0000c6ea  00000000  00000000  0006e530  2**0
+ 15 .debug_line   0000c7b4  00000000  00000000  0006e968  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_str    00007b4e  00000000  00000000  0007ac1a  2**0
+ 16 .debug_str    00007bad  00000000  00000000  0007b11c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .comment      0000007c  00000000  00000000  00082768  2**0
+ 17 .comment      0000007c  00000000  00000000  00082cc9  2**0
                   CONTENTS, READONLY
- 18 .debug_frame  00004628  00000000  00000000  000827e4  2**2
+ 18 .debug_frame  000046d8  00000000  00000000  00082d48  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -10173,123 +10173,124 @@ void SPI_WIFI_Delay(uint32_t Delay)
  8004292:	9308      	str	r3, [sp, #32]
   HAL_GPIO_Init(BUTTON_EXTI13_GPIO_Port, &GPIO_InitStruct);
  8004294:	4650      	mov	r0, sl
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
- 8004296:	9409      	str	r4, [sp, #36]	; 0x24
-  HAL_GPIO_Init(BUTTON_EXTI13_GPIO_Port, &GPIO_InitStruct);
- 8004298:	f7fc fda4 	bl	8000de4 <HAL_GPIO_Init>
 
-  /*Configure GPIO pins : PCPin PCPin PCPin PCPin 
-                           PCPin PCPin */
-  GPIO_InitStruct.Pin = ARD_A5_Pin|ARD_A4_Pin|ARD_A3_Pin|ARD_A2_Pin 
- 800429c:	233f      	movs	r3, #63	; 0x3f
- 800429e:	9307      	str	r3, [sp, #28]
-                          |ARD_A1_Pin|ARD_A0_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
+  /*configure GPIO pins: a0-a2 for relays & actuator*/
+  GPIO_InitStruct.Pin = ARD_A2_Pin|ARD_A1_Pin|ARD_A0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 8004296:	2603      	movs	r6, #3
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 8004298:	9409      	str	r4, [sp, #36]	; 0x24
+  HAL_GPIO_Init(BUTTON_EXTI13_GPIO_Port, &GPIO_InitStruct);
+ 800429a:	f7fc fda3 	bl	8000de4 <HAL_GPIO_Init>
+  GPIO_InitStruct.Pin = ARD_A2_Pin|ARD_A1_Pin|ARD_A0_Pin;
+ 800429e:	2338      	movs	r3, #56	; 0x38
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
  80042a0:	a907      	add	r1, sp, #28
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
- 80042a2:	230b      	movs	r3, #11
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
- 80042a4:	4650      	mov	r0, sl
+ 80042a2:	4650      	mov	r0, sl
 
   /*Configure GPIO pins : PAPin PAPin */
   GPIO_InitStruct.Pin = ARD_D1_Pin|ARD_D0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 80042a6:	2602      	movs	r6, #2
-  GPIO_InitStruct.Pin = ARD_D1_Pin|ARD_D0_Pin;
- 80042a8:	2703      	movs	r7, #3
-  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
- 80042aa:	9308      	str	r3, [sp, #32]
- 80042ac:	9301      	str	r3, [sp, #4]
+ 80042a4:	2702      	movs	r7, #2
+  GPIO_InitStruct.Pin = ARD_A2_Pin|ARD_A1_Pin|ARD_A0_Pin;
+ 80042a6:	9307      	str	r3, [sp, #28]
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 80042a8:	9508      	str	r5, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
- 80042ae:	9409      	str	r4, [sp, #36]	; 0x24
+ 80042aa:	9409      	str	r4, [sp, #36]	; 0x24
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 80042ac:	960a      	str	r6, [sp, #40]	; 0x28
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
- 80042b0:	f7fc fd98 	bl	8000de4 <HAL_GPIO_Init>
+ 80042ae:	f7fc fd99 	bl	8000de4 <HAL_GPIO_Init>
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
- 80042b4:	2208      	movs	r2, #8
+ 80042b2:	2308      	movs	r3, #8
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80042b6:	a907      	add	r1, sp, #28
- 80042b8:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
+ 80042b4:	a907      	add	r1, sp, #28
+ 80042b6:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
   GPIO_InitStruct.Alternate = GPIO_AF8_UART4;
- 80042bc:	920b      	str	r2, [sp, #44]	; 0x2c
- 80042be:	9200      	str	r2, [sp, #0]
+ 80042ba:	930b      	str	r3, [sp, #44]	; 0x2c
+ 80042bc:	9300      	str	r3, [sp, #0]
   GPIO_InitStruct.Pin = ARD_D1_Pin|ARD_D0_Pin;
- 80042c0:	9707      	str	r7, [sp, #28]
+ 80042be:	9607      	str	r6, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 80042c2:	9608      	str	r6, [sp, #32]
+ 80042c0:	9708      	str	r7, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
- 80042c4:	9409      	str	r4, [sp, #36]	; 0x24
+ 80042c2:	9409      	str	r4, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
- 80042c6:	970a      	str	r7, [sp, #40]	; 0x28
+ 80042c4:	960a      	str	r6, [sp, #40]	; 0x28
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80042c8:	f7fc fd8c 	bl	8000de4 <HAL_GPIO_Init>
+ 80042c6:	f7fc fd8d 	bl	8000de4 <HAL_GPIO_Init>
 
   /*Configure GPIO pins : PAPin PAPin PAPin */
   GPIO_InitStruct.Pin = ARD_D10_Pin|SPBTLE_RF_RST_Pin|ARD_D9_Pin;
- 80042cc:	f248 1104 	movw	r1, #33028	; 0x8104
- 80042d0:	9107      	str	r1, [sp, #28]
+ 80042ca:	f248 1204 	movw	r2, #33028	; 0x8104
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80042d2:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
- 80042d6:	a907      	add	r1, sp, #28
+ 80042ce:	a907      	add	r1, sp, #28
+ 80042d0:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
+  GPIO_InitStruct.Pin = ARD_D10_Pin|SPBTLE_RF_RST_Pin|ARD_D9_Pin;
+ 80042d4:	9207      	str	r2, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
- 80042d8:	9508      	str	r5, [sp, #32]
+ 80042d6:	9508      	str	r5, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
- 80042da:	9409      	str	r4, [sp, #36]	; 0x24
+ 80042d8:	9409      	str	r4, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
- 80042dc:	940a      	str	r4, [sp, #40]	; 0x28
+ 80042da:	940a      	str	r4, [sp, #40]	; 0x28
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
- 80042de:	f7fc fd81 	bl	8000de4 <HAL_GPIO_Init>
+ 80042dc:	f7fc fd82 	bl	8000de4 <HAL_GPIO_Init>
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = ARD_D4_Pin;
- 80042e2:	9a00      	ldr	r2, [sp, #0]
- 80042e4:	9207      	str	r2, [sp, #28]
+ 80042e0:	9b00      	ldr	r3, [sp, #0]
+ 80042e2:	9307      	str	r3, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
   HAL_GPIO_Init(ARD_D4_GPIO_Port, &GPIO_InitStruct);
- 80042e6:	a907      	add	r1, sp, #28
- 80042e8:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
+ 80042e4:	a907      	add	r1, sp, #28
+ 80042e6:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 80042ec:	9608      	str	r6, [sp, #32]
+ 80042ea:	9708      	str	r7, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
- 80042ee:	9409      	str	r4, [sp, #36]	; 0x24
+ 80042ec:	9409      	str	r4, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
- 80042f0:	940a      	str	r4, [sp, #40]	; 0x28
+ 80042ee:	940a      	str	r4, [sp, #40]	; 0x28
   GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
- 80042f2:	950b      	str	r5, [sp, #44]	; 0x2c
+ 80042f0:	950b      	str	r5, [sp, #44]	; 0x2c
   HAL_GPIO_Init(ARD_D4_GPIO_Port, &GPIO_InitStruct);
- 80042f4:	f7fc fd76 	bl	8000de4 <HAL_GPIO_Init>
+ 80042f2:	f7fc fd77 	bl	8000de4 <HAL_GPIO_Init>
 
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = ARD_D7_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
- 80042f8:	9b01      	ldr	r3, [sp, #4]
- 80042fa:	9308      	str	r3, [sp, #32]
+ 80042f6:	220b      	movs	r2, #11
   GPIO_InitStruct.Pin = ARD_D7_Pin;
- 80042fc:	2210      	movs	r2, #16
+ 80042f8:	2310      	movs	r3, #16
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(ARD_D7_GPIO_Port, &GPIO_InitStruct);
- 80042fe:	a907      	add	r1, sp, #28
- 8004300:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
+ 80042fa:	a907      	add	r1, sp, #28
+ 80042fc:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
+ 8004300:	9208      	str	r2, [sp, #32]
+ 8004302:	9201      	str	r2, [sp, #4]
   GPIO_InitStruct.Pin = ARD_D7_Pin;
- 8004304:	9207      	str	r2, [sp, #28]
+ 8004304:	9307      	str	r3, [sp, #28]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
  8004306:	9409      	str	r4, [sp, #36]	; 0x24
   HAL_GPIO_Init(ARD_D7_GPIO_Port, &GPIO_InitStruct);
  8004308:	f7fc fd6c 	bl	8000de4 <HAL_GPIO_Init>
 
   /*Configure GPIO pins : PAPin PAPin PAPin */
-  GPIO_InitStruct.Pin = ARD_D13_Pin|ARD_D12_Pin|ARD_D11_Pin;
- 800430c:	22e0      	movs	r2, #224	; 0xe0
- 800430e:	9207      	str	r2, [sp, #28]
+  GPIO_InitStruct.Pin = ARD_D13_Pin|ARD_D12_Pin|ARD_D11_Pin|ARD_D10_Pin;
+ 800430c:	23e4      	movs	r3, #228	; 0xe4
+ 800430e:	9307      	str	r3, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -10297,18 +10298,18 @@ void SPI_WIFI_Delay(uint32_t Delay)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
  8004310:	a907      	add	r1, sp, #28
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
- 8004312:	2205      	movs	r2, #5
+ 8004312:	2305      	movs	r3, #5
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
  8004314:	f04f 4090 	mov.w	r0, #1207959552	; 0x48000000
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI1;
- 8004318:	920b      	str	r2, [sp, #44]	; 0x2c
- 800431a:	9200      	str	r2, [sp, #0]
+ 8004318:	930b      	str	r3, [sp, #44]	; 0x2c
+ 800431a:	9300      	str	r3, [sp, #0]
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 800431c:	9608      	str	r6, [sp, #32]
+ 800431c:	9708      	str	r7, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
  800431e:	9409      	str	r4, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
- 8004320:	970a      	str	r7, [sp, #40]	; 0x28
+ 8004320:	960a      	str	r6, [sp, #40]	; 0x28
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
  8004322:	f7fc fd5f 	bl	8000de4 <HAL_GPIO_Init>
 
@@ -10331,14 +10332,14 @@ void SPI_WIFI_Delay(uint32_t Delay)
   /*Configure GPIO pin : PtPin */
   GPIO_InitStruct.Pin = ARD_D6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG_ADC_CONTROL;
- 8004336:	9b01      	ldr	r3, [sp, #4]
- 8004338:	9308      	str	r3, [sp, #32]
+ 8004336:	9a01      	ldr	r2, [sp, #4]
+ 8004338:	9208      	str	r2, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(ARD_D6_GPIO_Port, &GPIO_InitStruct);
  800433a:	a907      	add	r1, sp, #28
  800433c:	4640      	mov	r0, r8
   GPIO_InitStruct.Pin = ARD_D6_Pin;
- 800433e:	9607      	str	r6, [sp, #28]
+ 800433e:	9707      	str	r7, [sp, #28]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
  8004340:	9409      	str	r4, [sp, #36]	; 0x24
   HAL_GPIO_Init(ARD_D6_GPIO_Port, &GPIO_InitStruct);
@@ -10347,7 +10348,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
   /*Configure GPIO pins : PBPin PBPin PBPin PBPin 
                            PBPin PBPin PBPin */
   GPIO_InitStruct.Pin = ARD_D8_Pin|ISM43362_BOOT0_Pin|ISM43362_WAKEUP_Pin|LED2_Pin 
- 8004346:	f24f 0334 	movw	r3, #61492	; 0xf034
+ 8004346:	f24f 0234 	movw	r2, #61492	; 0xf034
                           |SPSGRF_915_SDN_Pin|ARD_D5_Pin|SPSGRF_915_SPI3_CSN_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10356,7 +10357,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
  800434a:	a907      	add	r1, sp, #28
  800434c:	4640      	mov	r0, r8
   GPIO_InitStruct.Pin = ARD_D8_Pin|ISM43362_BOOT0_Pin|ISM43362_WAKEUP_Pin|LED2_Pin 
- 800434e:	9307      	str	r3, [sp, #28]
+ 800434e:	9207      	str	r2, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
  8004350:	9508      	str	r5, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10369,7 +10370,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
   /*Configure GPIO pins : PDPin PDPin PDPin PDPin 
                            PDPin */
   GPIO_InitStruct.Pin = LPS22HB_INT_DRDY_EXTI0_Pin|LSM6DSL_INT1_EXTI11_Pin|ARD_D2_Pin|HTS221_DRDY_EXTI15_Pin 
- 800435a:	f64c 4304 	movw	r3, #52228	; 0xcc04
+ 800435a:	f64c 4204 	movw	r2, #52228	; 0xcc04
                           |PMOD_IRQ_EXTI12_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10377,7 +10378,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
  800435e:	a907      	add	r1, sp, #28
  8004360:	4648      	mov	r0, r9
   GPIO_InitStruct.Pin = LPS22HB_INT_DRDY_EXTI0_Pin|LSM6DSL_INT1_EXTI11_Pin|ARD_D2_Pin|HTS221_DRDY_EXTI15_Pin 
- 8004362:	9307      	str	r3, [sp, #28]
+ 8004362:	9207      	str	r2, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
  8004364:	f8cd b020 	str.w	fp, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10387,7 +10388,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
 
   /*Configure GPIO pins : PDPin PDPin PDPin PDPin */
   GPIO_InitStruct.Pin = USB_OTG_FS_PWR_EN_Pin|SPBTLE_RF_SPI3_CSN_Pin|PMOD_RESET_Pin|STSAFE_A100_RESET_Pin;
- 800436e:	f243 0381 	movw	r3, #12417	; 0x3081
+ 800436e:	f243 0281 	movw	r2, #12417	; 0x3081
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -10395,7 +10396,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
  8004372:	a907      	add	r1, sp, #28
  8004374:	4648      	mov	r0, r9
   GPIO_InitStruct.Pin = USB_OTG_FS_PWR_EN_Pin|SPBTLE_RF_SPI3_CSN_Pin|PMOD_RESET_Pin|STSAFE_A100_RESET_Pin;
- 8004376:	9307      	str	r3, [sp, #28]
+ 8004376:	9207      	str	r2, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
  8004378:	9508      	str	r5, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10407,7 +10408,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
 
   /*Configure GPIO pins : PCPin PCPin */
   GPIO_InitStruct.Pin = VL53L0X_XSHUT_Pin|LED3_WIFI__LED4_BLE_Pin;
- 8004382:	f44f 7310 	mov.w	r3, #576	; 0x240
+ 8004382:	f44f 7210 	mov.w	r2, #576	; 0x240
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -10415,7 +10416,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
  8004386:	a907      	add	r1, sp, #28
  8004388:	4650      	mov	r0, sl
   GPIO_InitStruct.Pin = VL53L0X_XSHUT_Pin|LED3_WIFI__LED4_BLE_Pin;
- 800438a:	9307      	str	r3, [sp, #28]
+ 800438a:	9207      	str	r2, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
  800438c:	9508      	str	r5, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10427,14 +10428,14 @@ void SPI_WIFI_Delay(uint32_t Delay)
 
   /*Configure GPIO pins : PCPin PCPin */
   GPIO_InitStruct.Pin = VL53L0X_GPIO1_EXTI7_Pin|LSM3MDL_DRDY_EXTI8_Pin;
- 8004396:	f44f 73c0 	mov.w	r3, #384	; 0x180
+ 8004396:	f44f 72c0 	mov.w	r2, #384	; 0x180
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
  800439a:	a907      	add	r1, sp, #28
  800439c:	4650      	mov	r0, sl
   GPIO_InitStruct.Pin = VL53L0X_GPIO1_EXTI7_Pin|LSM3MDL_DRDY_EXTI8_Pin;
- 800439e:	9307      	str	r3, [sp, #28]
+ 800439e:	9207      	str	r2, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
  80043a0:	f8cd b020 	str.w	fp, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -10447,19 +10448,19 @@ void SPI_WIFI_Delay(uint32_t Delay)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
- 80043aa:	9a00      	ldr	r2, [sp, #0]
- 80043ac:	920b      	str	r2, [sp, #44]	; 0x2c
+ 80043aa:	9b00      	ldr	r3, [sp, #0]
+ 80043ac:	930b      	str	r3, [sp, #44]	; 0x2c
   HAL_GPIO_Init(PMOD_SPI2_SCK_GPIO_Port, &GPIO_InitStruct);
  80043ae:	a907      	add	r1, sp, #28
  80043b0:	4648      	mov	r0, r9
   GPIO_InitStruct.Pin = PMOD_SPI2_SCK_Pin;
- 80043b2:	9607      	str	r6, [sp, #28]
+ 80043b2:	9707      	str	r7, [sp, #28]
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 80043b4:	9608      	str	r6, [sp, #32]
+ 80043b4:	9708      	str	r7, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
  80043b6:	9409      	str	r4, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
- 80043b8:	970a      	str	r7, [sp, #40]	; 0x28
+ 80043b8:	960a      	str	r6, [sp, #40]	; 0x28
   HAL_GPIO_Init(PMOD_SPI2_SCK_GPIO_Port, &GPIO_InitStruct);
  80043ba:	f7fc fd13 	bl	8000de4 <HAL_GPIO_Init>
 
@@ -10480,11 +10481,11 @@ void SPI_WIFI_Delay(uint32_t Delay)
   GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
  80043c8:	930b      	str	r3, [sp, #44]	; 0x2c
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
- 80043ca:	9608      	str	r6, [sp, #32]
+ 80043ca:	9708      	str	r7, [sp, #32]
   GPIO_InitStruct.Pull = GPIO_NOPULL;
  80043cc:	9409      	str	r4, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
- 80043ce:	970a      	str	r7, [sp, #40]	; 0x28
+ 80043ce:	960a      	str	r6, [sp, #40]	; 0x28
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
  80043d0:	f7fc fd08 	bl	8000de4 <HAL_GPIO_Init>
 
@@ -10509,7 +10510,7 @@ void SPI_WIFI_Delay(uint32_t Delay)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
  80043e6:	9509      	str	r5, [sp, #36]	; 0x24
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
- 80043e8:	970a      	str	r7, [sp, #40]	; 0x28
+ 80043e8:	960a      	str	r6, [sp, #40]	; 0x28
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
  80043ea:	f7fc fcfb 	bl	8000de4 <HAL_GPIO_Init>
 
@@ -10723,7 +10724,7 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
  8004510:	48000400 	.word	0x48000400
 
 08004514 <main>:
-  * @breif: start wifi and upload accelerometer data if bump detected
+  * action as required
   *
   * @retval None
   */
