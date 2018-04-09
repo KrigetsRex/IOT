@@ -1,9 +1,9 @@
 main.c:63:6:openWindow	8	static
-main.c:69:6:closeWindow	8	static
-main.c:75:6:furnaceON	0	static
-main.c:79:6:furnaceOFF	0	static
-main.c:83:6:acON	0	static
-main.c:87:6:acOFF	0	static
-main.c:91:10:getExtTemp	16	static
-main.c:99:9:getWindowState	16	static
-main.c:119:5:main	48	static
+main.c:73:6:closeWindow	8	static
+main.c:83:6:furnaceON	0	static
+main.c:87:6:furnaceOFF	0	static
+main.c:91:6:acON	0	static
+main.c:95:6:acOFF	0	static
+main.c:99:10:getExtTemp	16	static
+main.c:107:9:getWindowState	16	static
+main.c:127:5:main	24	static

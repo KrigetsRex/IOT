@@ -23,23 +23,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
   9 .ARM.attributes 00000030  00000000  00000000  00020080  2**0
                   CONTENTS, READONLY
- 10 .debug_info   00034f59  00000000  00000000  000200b0  2**0
+ 10 .debug_info   00035001  00000000  00000000  000200b0  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_abbrev 00005ce2  00000000  00000000  00055009  2**0
+ 11 .debug_abbrev 00005ce2  00000000  00000000  000550b1  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00010dd0  00000000  00000000  0005aceb  2**0
+ 12 .debug_loc    00010da6  00000000  00000000  0005ad93  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_aranges 00001620  00000000  00000000  0006bac0  2**3
+ 13 .debug_aranges 00001620  00000000  00000000  0006bb40  2**3
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_ranges 00001a48  00000000  00000000  0006d0e0  2**3
+ 14 .debug_ranges 00001a48  00000000  00000000  0006d160  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_line   0000c7e0  00000000  00000000  0006eb28  2**0
+ 15 .debug_line   0000c7e4  00000000  00000000  0006eba8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_str    00007bb2  00000000  00000000  0007b308  2**0
+ 16 .debug_str    00007bb2  00000000  00000000  0007b38c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .comment      0000007c  00000000  00000000  00082eba  2**0
+ 17 .comment      0000007c  00000000  00000000  00082f3e  2**0
                   CONTENTS, READONLY
- 18 .debug_frame  00004700  00000000  00000000  00082f38  2**2
+ 18 .debug_frame  000046f4  00000000  00000000  00082fbc  2**2
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -10750,308 +10750,290 @@ uint8_t errorNum = 0;
 void openWindow(){
  8004524:	b510      	push	{r4, lr}
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
- 8004526:	4c08      	ldr	r4, [pc, #32]	; (8004548 <openWindow+0x24>)
+ 8004526:	4c10      	ldr	r4, [pc, #64]	; (8004568 <openWindow+0x44>)
  8004528:	2201      	movs	r2, #1
  800452a:	2108      	movs	r1, #8
  800452c:	4620      	mov	r0, r4
  800452e:	f7fc fdd5 	bl	80010dc <HAL_GPIO_WritePin>
-	HAL_Delay(1);
- 8004532:	2001      	movs	r0, #1
+	HAL_Delay(2);
+ 8004532:	2002      	movs	r0, #2
  8004534:	f7fc fb2e 	bl	8000b94 <HAL_Delay>
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
- 8004538:	4620      	mov	r0, r4
- 800453a:	2200      	movs	r2, #0
- 800453c:	2108      	movs	r1, #8
-}
- 800453e:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+ 8004538:	2200      	movs	r2, #0
+ 800453a:	2108      	movs	r1, #8
+ 800453c:	4620      	mov	r0, r4
+ 800453e:	f7fc fdcd 	bl	80010dc <HAL_GPIO_WritePin>
+	HAL_Delay(2);
+ 8004542:	2002      	movs	r0, #2
+ 8004544:	f7fc fb26 	bl	8000b94 <HAL_Delay>
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+ 8004548:	2201      	movs	r2, #1
+ 800454a:	2108      	movs	r1, #8
+ 800454c:	4620      	mov	r0, r4
+ 800454e:	f7fc fdc5 	bl	80010dc <HAL_GPIO_WritePin>
+	HAL_Delay(2);
+ 8004552:	2002      	movs	r0, #2
+ 8004554:	f7fc fb1e 	bl	8000b94 <HAL_Delay>
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
- 8004542:	f7fc bdcb 	b.w	80010dc <HAL_GPIO_WritePin>
- 8004546:	bf00      	nop
- 8004548:	48000800 	.word	0x48000800
+ 8004558:	4620      	mov	r0, r4
+ 800455a:	2200      	movs	r2, #0
+ 800455c:	2108      	movs	r1, #8
+}
+ 800455e:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+ 8004562:	f7fc bdbb 	b.w	80010dc <HAL_GPIO_WritePin>
+ 8004566:	bf00      	nop
+ 8004568:	48000800 	.word	0x48000800
 
-0800454c <closeWindow>:
+0800456c <closeWindow>:
 
 void closeWindow(){
- 800454c:	b510      	push	{r4, lr}
+ 800456c:	b510      	push	{r4, lr}
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
- 800454e:	4c08      	ldr	r4, [pc, #32]	; (8004570 <closeWindow+0x24>)
- 8004550:	2201      	movs	r2, #1
- 8004552:	2108      	movs	r1, #8
- 8004554:	4620      	mov	r0, r4
- 8004556:	f7fc fdc1 	bl	80010dc <HAL_GPIO_WritePin>
-	HAL_Delay(2);
- 800455a:	2002      	movs	r0, #2
- 800455c:	f7fc fb1a 	bl	8000b94 <HAL_Delay>
+ 800456e:	4c10      	ldr	r4, [pc, #64]	; (80045b0 <closeWindow+0x44>)
+ 8004570:	2201      	movs	r2, #1
+ 8004572:	2108      	movs	r1, #8
+ 8004574:	4620      	mov	r0, r4
+ 8004576:	f7fc fdb1 	bl	80010dc <HAL_GPIO_WritePin>
+	HAL_Delay(1);
+ 800457a:	2001      	movs	r0, #1
+ 800457c:	f7fc fb0a 	bl	8000b94 <HAL_Delay>
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
- 8004560:	4620      	mov	r0, r4
- 8004562:	2200      	movs	r2, #0
- 8004564:	2108      	movs	r1, #8
-}
- 8004566:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+ 8004580:	2200      	movs	r2, #0
+ 8004582:	2108      	movs	r1, #8
+ 8004584:	4620      	mov	r0, r4
+ 8004586:	f7fc fda9 	bl	80010dc <HAL_GPIO_WritePin>
+	HAL_Delay(1);
+ 800458a:	2001      	movs	r0, #1
+ 800458c:	f7fc fb02 	bl	8000b94 <HAL_Delay>
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+ 8004590:	2201      	movs	r2, #1
+ 8004592:	2108      	movs	r1, #8
+ 8004594:	4620      	mov	r0, r4
+ 8004596:	f7fc fda1 	bl	80010dc <HAL_GPIO_WritePin>
+	HAL_Delay(1);
+ 800459a:	2001      	movs	r0, #1
+ 800459c:	f7fc fafa 	bl	8000b94 <HAL_Delay>
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
- 800456a:	f7fc bdb7 	b.w	80010dc <HAL_GPIO_WritePin>
- 800456e:	bf00      	nop
- 8004570:	48000800 	.word	0x48000800
-
-08004574 <furnaceON>:
-
-void furnaceON(){
-	HAL_GPIO_WritePin(GPIOC,ARD_A0_Pin,GPIO_PIN_SET);
- 8004574:	2201      	movs	r2, #1
- 8004576:	2120      	movs	r1, #32
- 8004578:	4801      	ldr	r0, [pc, #4]	; (8004580 <furnaceON+0xc>)
- 800457a:	f7fc bdaf 	b.w	80010dc <HAL_GPIO_WritePin>
- 800457e:	bf00      	nop
- 8004580:	48000800 	.word	0x48000800
-
-08004584 <furnaceOFF>:
+ 80045a0:	4620      	mov	r0, r4
+ 80045a2:	2200      	movs	r2, #0
+ 80045a4:	2108      	movs	r1, #8
 }
-
-void furnaceOFF(){
-	HAL_GPIO_WritePin(GPIOC,ARD_A0_Pin,GPIO_PIN_RESET);
- 8004584:	2200      	movs	r2, #0
- 8004586:	2120      	movs	r1, #32
- 8004588:	4801      	ldr	r0, [pc, #4]	; (8004590 <furnaceOFF+0xc>)
- 800458a:	f7fc bda7 	b.w	80010dc <HAL_GPIO_WritePin>
- 800458e:	bf00      	nop
- 8004590:	48000800 	.word	0x48000800
-
-08004594 <acON>:
-}
-
-void acON(){
-	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_RESET);
- 8004594:	2200      	movs	r2, #0
- 8004596:	2110      	movs	r1, #16
- 8004598:	4801      	ldr	r0, [pc, #4]	; (80045a0 <acON+0xc>)
- 800459a:	f7fc bd9f 	b.w	80010dc <HAL_GPIO_WritePin>
- 800459e:	bf00      	nop
- 80045a0:	48000800 	.word	0x48000800
-
-080045a4 <acOFF>:
-}
-
-void acOFF(){
-	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_SET);
- 80045a4:	2201      	movs	r2, #1
- 80045a6:	2110      	movs	r1, #16
- 80045a8:	4801      	ldr	r0, [pc, #4]	; (80045b0 <acOFF+0xc>)
+ 80045a6:	e8bd 4010 	ldmia.w	sp!, {r4, lr}
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
  80045aa:	f7fc bd97 	b.w	80010dc <HAL_GPIO_WritePin>
  80045ae:	bf00      	nop
  80045b0:	48000800 	.word	0x48000800
 
-080045b4 <getExtTemp>:
+080045b4 <furnaceON>:
+
+void furnaceON(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A0_Pin,GPIO_PIN_SET);
+ 80045b4:	2201      	movs	r2, #1
+ 80045b6:	2120      	movs	r1, #32
+ 80045b8:	4801      	ldr	r0, [pc, #4]	; (80045c0 <furnaceON+0xc>)
+ 80045ba:	f7fc bd8f 	b.w	80010dc <HAL_GPIO_WritePin>
+ 80045be:	bf00      	nop
+ 80045c0:	48000800 	.word	0x48000800
+
+080045c4 <furnaceOFF>:
+}
+
+void furnaceOFF(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A0_Pin,GPIO_PIN_RESET);
+ 80045c4:	2200      	movs	r2, #0
+ 80045c6:	2120      	movs	r1, #32
+ 80045c8:	4801      	ldr	r0, [pc, #4]	; (80045d0 <furnaceOFF+0xc>)
+ 80045ca:	f7fc bd87 	b.w	80010dc <HAL_GPIO_WritePin>
+ 80045ce:	bf00      	nop
+ 80045d0:	48000800 	.word	0x48000800
+
+080045d4 <acON>:
+}
+
+void acON(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_RESET);
+ 80045d4:	2200      	movs	r2, #0
+ 80045d6:	2110      	movs	r1, #16
+ 80045d8:	4801      	ldr	r0, [pc, #4]	; (80045e0 <acON+0xc>)
+ 80045da:	f7fc bd7f 	b.w	80010dc <HAL_GPIO_WritePin>
+ 80045de:	bf00      	nop
+ 80045e0:	48000800 	.word	0x48000800
+
+080045e4 <acOFF>:
+}
+
+void acOFF(){
+	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_SET);
+ 80045e4:	2201      	movs	r2, #1
+ 80045e6:	2110      	movs	r1, #16
+ 80045e8:	4801      	ldr	r0, [pc, #4]	; (80045f0 <acOFF+0xc>)
+ 80045ea:	f7fc bd77 	b.w	80010dc <HAL_GPIO_WritePin>
+ 80045ee:	bf00      	nop
+ 80045f0:	48000800 	.word	0x48000800
+
+080045f4 <getExtTemp>:
 }
 
 uint16_t getExtTemp(){
- 80045b4:	b507      	push	{r0, r1, r2, lr}
+ 80045f4:	b507      	push	{r0, r1, r2, lr}
 	uint16_t temp = -1;
 	uint8_t buf[2];
 	HAL_SPI_Receive(&hspi1, buf, 12, 1000);
- 80045b6:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
- 80045ba:	220c      	movs	r2, #12
- 80045bc:	a901      	add	r1, sp, #4
- 80045be:	4806      	ldr	r0, [pc, #24]	; (80045d8 <getExtTemp+0x24>)
- 80045c0:	f7fe fc2a 	bl	8002e18 <HAL_SPI_Receive>
+ 80045f6:	f44f 737a 	mov.w	r3, #1000	; 0x3e8
+ 80045fa:	220c      	movs	r2, #12
+ 80045fc:	a901      	add	r1, sp, #4
+ 80045fe:	4806      	ldr	r0, [pc, #24]	; (8004618 <getExtTemp+0x24>)
+ 8004600:	f7fe fc0a 	bl	8002e18 <HAL_SPI_Receive>
 	temp = (((uint16_t)buf[1]) << 5) + (buf[0] >> 3);
- 80045c4:	f89d 3004 	ldrb.w	r3, [sp, #4]
- 80045c8:	f89d 0005 	ldrb.w	r0, [sp, #5]
- 80045cc:	08db      	lsrs	r3, r3, #3
+ 8004604:	f89d 3004 	ldrb.w	r3, [sp, #4]
+ 8004608:	f89d 0005 	ldrb.w	r0, [sp, #5]
+ 800460c:	08db      	lsrs	r3, r3, #3
 	return temp;
 }
- 80045ce:	eb03 1040 	add.w	r0, r3, r0, lsl #5
- 80045d2:	b003      	add	sp, #12
- 80045d4:	f85d fb04 	ldr.w	pc, [sp], #4
- 80045d8:	200008bc 	.word	0x200008bc
+ 800460e:	eb03 1040 	add.w	r0, r3, r0, lsl #5
+ 8004612:	b003      	add	sp, #12
+ 8004614:	f85d fb04 	ldr.w	pc, [sp], #4
+ 8004618:	200008bc 	.word	0x200008bc
 
-080045dc <getWindowState>:
-
-uint8_t getWindowState(){
- 80045dc:	b538      	push	{r3, r4, r5, lr}
-	uint8_t state = -1;
-	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_SET);
- 80045de:	4c0a      	ldr	r4, [pc, #40]	; (8004608 <getWindowState+0x2c>)
- 80045e0:	2201      	movs	r2, #1
- 80045e2:	4620      	mov	r0, r4
- 80045e4:	2104      	movs	r1, #4
- 80045e6:	f7fc fd79 	bl	80010dc <HAL_GPIO_WritePin>
-	if (HAL_GPIO_ReadPin(GPIOC,ARD_A4_Pin) == GPIO_PIN_SET){
- 80045ea:	2102      	movs	r1, #2
- 80045ec:	4620      	mov	r0, r4
- 80045ee:	f7fc fd6f 	bl	80010d0 <HAL_GPIO_ReadPin>
-		state = CLOSED;
-	}
-	else{
-		state = OPEN;
-	}
-	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_RESET);
- 80045f2:	2200      	movs	r2, #0
-	if (HAL_GPIO_ReadPin(GPIOC,ARD_A4_Pin) == GPIO_PIN_SET){
- 80045f4:	4605      	mov	r5, r0
-	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_RESET);
- 80045f6:	2104      	movs	r1, #4
- 80045f8:	4620      	mov	r0, r4
- 80045fa:	f7fc fd6f 	bl	80010dc <HAL_GPIO_WritePin>
-	return state;
-}
- 80045fe:	1e6b      	subs	r3, r5, #1
- 8004600:	4258      	negs	r0, r3
- 8004602:	4158      	adcs	r0, r3
- 8004604:	bd38      	pop	{r3, r4, r5, pc}
- 8004606:	bf00      	nop
- 8004608:	48000800 	.word	0x48000800
-
-0800460c <main>:
+0800461c <main>:
   * action as required
   *
   * @retval None
   */
 int main(void)
 {
- 800460c:	e92d 43f0 	stmdb	sp!, {r4, r5, r6, r7, r8, r9, lr}
- 8004610:	b085      	sub	sp, #20
+ 800461c:	b58f      	push	{r0, r1, r2, r3, r7, lr}
   /* MCU Configuration----------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
- 8004612:	f7fc faa5 	bl	8000b60 <HAL_Init>
+ 800461e:	f7fc fa9f 	bl	8000b60 <HAL_Init>
 
   /* Configure the system clock */
   SystemClock_Config();
- 8004616:	f7ff f86f 	bl	80036f8 <SystemClock_Config>
+ 8004622:	f7ff f869 	bl	80036f8 <SystemClock_Config>
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
- 800461a:	f7ff fdc7 	bl	80041ac <MX_GPIO_Init>
+ 8004626:	f7ff fdc1 	bl	80041ac <MX_GPIO_Init>
   MX_DFSDM1_Init();
- 800461e:	f7ff f8f5 	bl	800380c <MX_DFSDM1_Init>
+ 800462a:	f7ff f8ef 	bl	800380c <MX_DFSDM1_Init>
   MX_I2C2_Init();
- 8004622:	f7ff ff0d 	bl	8004440 <MX_I2C2_Init>
+ 800462e:	f7ff ff07 	bl	8004440 <MX_I2C2_Init>
   MX_QUADSPI_Init();
- 8004626:	f000 f881 	bl	800472c <MX_QUADSPI_Init>
+ 8004632:	f000 f87b 	bl	800472c <MX_QUADSPI_Init>
   //MX_SPI3_Init();
   MX_USART1_UART_Init();
- 800462a:	f000 f9bf 	bl	80049ac <MX_USART1_UART_Init>
+ 8004636:	f000 f9b9 	bl	80049ac <MX_USART1_UART_Init>
   MX_USART3_UART_Init();
- 800462e:	f000 f9df 	bl	80049f0 <MX_USART3_UART_Init>
+ 800463a:	f000 f9d9 	bl	80049f0 <MX_USART3_UART_Init>
   MX_USB_OTG_FS_PCD_Init();
- 8004632:	f000 fa45 	bl	8004ac0 <MX_USB_OTG_FS_PCD_Init>
+ 800463e:	f000 fa3f 	bl	8004ac0 <MX_USB_OTG_FS_PCD_Init>
   BSP_TSENSOR_Init();
- 8004636:	f000 f8fb 	bl	8004830 <BSP_TSENSOR_Init>
+ 8004642:	f000 f8f5 	bl	8004830 <BSP_TSENSOR_Init>
   SPI_WIFI_Init();
- 800463a:	f7ff fc5b 	bl	8003ef4 <SPI_WIFI_Init>
+ 8004646:	f7ff fc55 	bl	8003ef4 <SPI_WIFI_Init>
   WIFI_Init();
- 800463e:	f000 faa3 	bl	8004b88 <WIFI_Init>
+ 800464a:	f000 fa9d 	bl	8004b88 <WIFI_Init>
 
   //functionality test
   BSP_TSENSOR_ReadTemp(&int_temp);
- 8004642:	482e      	ldr	r0, [pc, #184]	; (80046fc <main+0xf0>)
+ 800464e:	482b      	ldr	r0, [pc, #172]	; (80046fc <main+0xe0>)
   ext_temp = getExtTemp();
- 8004644:	4f2e      	ldr	r7, [pc, #184]	; (8004700 <main+0xf4>)
+ 8004650:	4f2b      	ldr	r7, [pc, #172]	; (8004700 <main+0xe4>)
   BSP_TSENSOR_ReadTemp(&int_temp);
- 8004646:	f000 f905 	bl	8004854 <BSP_TSENSOR_ReadTemp>
+ 8004652:	f000 f8ff 	bl	8004854 <BSP_TSENSOR_ReadTemp>
   ext_temp = getExtTemp();
- 800464a:	f7ff ffb3 	bl	80045b4 <getExtTemp>
- 800464e:	8038      	strh	r0, [r7, #0]
-  uint8_t state = 9;
-  state = getWindowState();
- 8004650:	f7ff ffc4 	bl	80045dc <getWindowState>
-  if (state == OPEN){
- 8004654:	2800      	cmp	r0, #0
- 8004656:	d14d      	bne.n	80046f4 <main+0xe8>
-	  closeWindow();
- 8004658:	f7ff ff78 	bl	800454c <closeWindow>
-  }
-  else{
-	  openWindow();
-  }
+ 8004656:	f7ff ffcd 	bl	80045f4 <getExtTemp>
+ 800465a:	8038      	strh	r0, [r7, #0]
+  openWindow();
+ 800465c:	f7ff ff62 	bl	8004524 <openWindow>
+  closeWindow();
+ 8004660:	f7ff ff84 	bl	800456c <closeWindow>
   furnaceON();
- 800465c:	f7ff ff8a 	bl	8004574 <furnaceON>
+ 8004664:	f7ff ffa6 	bl	80045b4 <furnaceON>
   furnaceOFF();
- 8004660:	f7ff ff90 	bl	8004584 <furnaceOFF>
+ 8004668:	f7ff ffac 	bl	80045c4 <furnaceOFF>
   acON();
- 8004664:	f7ff ff96 	bl	8004594 <acON>
+ 800466c:	f7ff ffb2 	bl	80045d4 <acON>
   acOFF();
- 8004668:	f7ff ff9c 	bl	80045a4 <acOFF>
+ 8004670:	f7ff ffb8 	bl	80045e4 <acOFF>
 
 
   //Connect to Access Point
   stat = WIFI_Connect("LukeandMichelle","10122010",  WIFI_ECN_WPA2_PSK);
- 800466c:	2203      	movs	r2, #3
- 800466e:	4925      	ldr	r1, [pc, #148]	; (8004704 <main+0xf8>)
- 8004670:	4825      	ldr	r0, [pc, #148]	; (8004708 <main+0xfc>)
- 8004672:	f000 faad 	bl	8004bd0 <WIFI_Connect>
+ 8004674:	2203      	movs	r2, #3
+ 8004676:	4923      	ldr	r1, [pc, #140]	; (8004704 <main+0xe8>)
+ 8004678:	4823      	ldr	r0, [pc, #140]	; (8004708 <main+0xec>)
+ 800467a:	f000 faa9 	bl	8004bd0 <WIFI_Connect>
   if (stat != WIFI_STATUS_OK){
- 8004676:	b120      	cbz	r0, 8004682 <main+0x76>
+ 800467e:	b120      	cbz	r0, 800468a <main+0x6e>
 	  stat = WIFI_Connect("iotclass","myiotclass",  WIFI_ECN_WPA2_PSK);
- 8004678:	2203      	movs	r2, #3
- 800467a:	4924      	ldr	r1, [pc, #144]	; (800470c <main+0x100>)
- 800467c:	4824      	ldr	r0, [pc, #144]	; (8004710 <main+0x104>)
- 800467e:	f000 faa7 	bl	8004bd0 <WIFI_Connect>
+ 8004680:	2203      	movs	r2, #3
+ 8004682:	4922      	ldr	r1, [pc, #136]	; (800470c <main+0xf0>)
+ 8004684:	4822      	ldr	r0, [pc, #136]	; (8004710 <main+0xf4>)
+ 8004686:	f000 faa3 	bl	8004bd0 <WIFI_Connect>
   }
 
   //Connect to ThingSpeak
   WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
- 8004682:	4e24      	ldr	r6, [pc, #144]	; (8004714 <main+0x108>)
+ 800468a:	4e22      	ldr	r6, [pc, #136]	; (8004714 <main+0xf8>)
   //WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
 
   while (1){
 	  BSP_TSENSOR_ReadTemp(&int_temp);
- 8004684:	f8df 8074 	ldr.w	r8, [pc, #116]	; 80046fc <main+0xf0>
+ 800468c:	f8df 806c 	ldr.w	r8, [pc, #108]	; 80046fc <main+0xe0>
   WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
- 8004688:	6832      	ldr	r2, [r6, #0]
+ 8004690:	6832      	ldr	r2, [r6, #0]
 	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%u&field4=%u",
- 800468a:	f8df 909c 	ldr.w	r9, [pc, #156]	; 8004728 <main+0x11c>
- 800468e:	4d22      	ldr	r5, [pc, #136]	; (8004718 <main+0x10c>)
+ 8004692:	f8df 9094 	ldr.w	r9, [pc, #148]	; 8004728 <main+0x10c>
+ 8004696:	4d20      	ldr	r5, [pc, #128]	; (8004718 <main+0xfc>)
   WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
- 8004690:	2100      	movs	r1, #0
- 8004692:	2350      	movs	r3, #80	; 0x50
- 8004694:	9300      	str	r3, [sp, #0]
- 8004696:	9101      	str	r1, [sp, #4]
- 8004698:	4b20      	ldr	r3, [pc, #128]	; (800471c <main+0x110>)
- 800469a:	4608      	mov	r0, r1
- 800469c:	f000 faac 	bl	8004bf8 <WIFI_OpenClientConnection>
+ 8004698:	2100      	movs	r1, #0
+ 800469a:	2350      	movs	r3, #80	; 0x50
+ 800469c:	9300      	str	r3, [sp, #0]
+ 800469e:	9101      	str	r1, [sp, #4]
+ 80046a0:	4b1e      	ldr	r3, [pc, #120]	; (800471c <main+0x100>)
+ 80046a2:	4608      	mov	r0, r1
+ 80046a4:	f000 faa8 	bl	8004bf8 <WIFI_OpenClientConnection>
 	  BSP_TSENSOR_ReadTemp(&int_temp);
- 80046a0:	4816      	ldr	r0, [pc, #88]	; (80046fc <main+0xf0>)
- 80046a2:	f000 f8d7 	bl	8004854 <BSP_TSENSOR_ReadTemp>
+ 80046a8:	4814      	ldr	r0, [pc, #80]	; (80046fc <main+0xe0>)
+ 80046aa:	f000 f8d3 	bl	8004854 <BSP_TSENSOR_ReadTemp>
 	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%u&field4=%u",
- 80046a6:	4b1e      	ldr	r3, [pc, #120]	; (8004720 <main+0x114>)
- 80046a8:	f8d8 0000 	ldr.w	r0, [r8]
- 80046ac:	781b      	ldrb	r3, [r3, #0]
- 80046ae:	9303      	str	r3, [sp, #12]
- 80046b0:	883b      	ldrh	r3, [r7, #0]
- 80046b2:	9302      	str	r3, [sp, #8]
- 80046b4:	f7fb ff48 	bl	8000548 <__aeabi_f2d>
- 80046b8:	f899 4000 	ldrb.w	r4, [r9]
- 80046bc:	e9cd 0100 	strd	r0, r1, [sp]
- 80046c0:	4622      	mov	r2, r4
- 80046c2:	4918      	ldr	r1, [pc, #96]	; (8004724 <main+0x118>)
- 80046c4:	4628      	mov	r0, r5
- 80046c6:	f000 fb3b 	bl	8004d40 <siprintf>
+ 80046ae:	4b1c      	ldr	r3, [pc, #112]	; (8004720 <main+0x104>)
+ 80046b0:	f8d8 0000 	ldr.w	r0, [r8]
+ 80046b4:	781b      	ldrb	r3, [r3, #0]
+ 80046b6:	9303      	str	r3, [sp, #12]
+ 80046b8:	883b      	ldrh	r3, [r7, #0]
+ 80046ba:	9302      	str	r3, [sp, #8]
+ 80046bc:	f7fb ff44 	bl	8000548 <__aeabi_f2d>
+ 80046c0:	f899 4000 	ldrb.w	r4, [r9]
+ 80046c4:	e9cd 0100 	strd	r0, r1, [sp]
+ 80046c8:	4622      	mov	r2, r4
+ 80046ca:	4916      	ldr	r1, [pc, #88]	; (8004724 <main+0x108>)
+ 80046cc:	4628      	mov	r0, r5
+ 80046ce:	f000 fb37 	bl	8004d40 <siprintf>
 	  mode, int_temp, ext_temp, errorNum);
 	  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
- 80046ca:	2400      	movs	r4, #0
- 80046cc:	2350      	movs	r3, #80	; 0x50
- 80046ce:	6832      	ldr	r2, [r6, #0]
- 80046d0:	4621      	mov	r1, r4
- 80046d2:	e88d 0018 	stmia.w	sp, {r3, r4}
- 80046d6:	4620      	mov	r0, r4
- 80046d8:	4b10      	ldr	r3, [pc, #64]	; (800471c <main+0x110>)
- 80046da:	f000 fa8d 	bl	8004bf8 <WIFI_OpenClientConnection>
+ 80046d2:	2400      	movs	r4, #0
+ 80046d4:	2350      	movs	r3, #80	; 0x50
+ 80046d6:	6832      	ldr	r2, [r6, #0]
+ 80046d8:	4621      	mov	r1, r4
+ 80046da:	e88d 0018 	stmia.w	sp, {r3, r4}
+ 80046de:	4620      	mov	r0, r4
+ 80046e0:	4b0e      	ldr	r3, [pc, #56]	; (800471c <main+0x100>)
+ 80046e2:	f000 fa89 	bl	8004bf8 <WIFI_OpenClientConnection>
 	  thingSpeakUpdate(WIFI_xmit);
- 80046de:	4628      	mov	r0, r5
- 80046e0:	f7ff f86e 	bl	80037c0 <thingSpeakUpdate>
+ 80046e6:	4628      	mov	r0, r5
+ 80046e8:	f7ff f86a 	bl	80037c0 <thingSpeakUpdate>
 	  WIFI_CloseClientConnection(0);
- 80046e4:	4620      	mov	r0, r4
- 80046e6:	f000 faaf 	bl	8004c48 <WIFI_CloseClientConnection>
+ 80046ec:	4620      	mov	r0, r4
+ 80046ee:	f000 faab 	bl	8004c48 <WIFI_CloseClientConnection>
 	  HAL_Delay(15000);
- 80046ea:	f643 2098 	movw	r0, #15000	; 0x3a98
- 80046ee:	f7fc fa51 	bl	8000b94 <HAL_Delay>
- 80046f2:	e7d5      	b.n	80046a0 <main+0x94>
-	  openWindow();
- 80046f4:	f7ff ff16 	bl	8004524 <openWindow>
- 80046f8:	e7b0      	b.n	800465c <main+0x50>
- 80046fa:	bf00      	nop
+ 80046f2:	f643 2098 	movw	r0, #15000	; 0x3a98
+ 80046f6:	f7fc fa4d 	bl	8000b94 <HAL_Delay>
+ 80046fa:	e7d5      	b.n	80046a8 <main+0x8c>
  80046fc:	20000208 	.word	0x20000208
  8004700:	20000206 	.word	0x20000206
  8004704:	08005837 	.word	0x08005837
@@ -12295,7 +12277,7 @@ LoopFillZerobss:
  8004cba:	f000 f811 	bl	8004ce0 <__libc_init_array>
 /* Call the application's entry point.*/
 	bl	main
- 8004cbe:	f7ff fca5 	bl	800460c <main>
+ 8004cbe:	f7ff fcad 	bl	800461c <main>
 
 08004cc2 <LoopForever>:
 

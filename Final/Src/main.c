@@ -62,13 +62,21 @@ uint8_t errorNum = 0;
 /* Private functions -----------------------------------------------*/
 void openWindow(){
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_Delay(1);
+	HAL_Delay(2);
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+	HAL_Delay(2);
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+	HAL_Delay(2);
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
 }
 
 void closeWindow(){
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_Delay(2);
+	HAL_Delay(1);
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+	HAL_Delay(1);
+	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+	HAL_Delay(1);
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
 }
 
@@ -142,14 +150,8 @@ int main(void)
   //functionality test
   BSP_TSENSOR_ReadTemp(&int_temp);
   ext_temp = getExtTemp();
-  uint8_t state = 9;
-  state = getWindowState();
-  if (state == OPEN){
-	  closeWindow();
-  }
-  else{
-	  openWindow();
-  }
+  openWindow();
+  closeWindow();
   furnaceON();
   furnaceOFF();
   acON();
