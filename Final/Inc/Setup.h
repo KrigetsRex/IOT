@@ -34,6 +34,10 @@ static uint32_t Timeout = 10000;
 #define AC_ON 3
 #define FURNACE_ON 4
 
+//window state
+#define OPEN 0
+#define CLOSED 1
+
 //error numbers
 #define NO_ERROR 0
 #define WINDOW_NOT_CLOSED 1

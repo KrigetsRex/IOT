@@ -6,13 +6,21 @@ relays
   need to set PC-4 and PC-5 as outputs
   pc-4 goes to a0,  pc-5 to a1  on cn2
 
+  black - vcc
+  white - a0 Furnace(bottom)
+  grey - a1 AC(top)
+  purple - gnd
+
 actuator
   set pc-3 as output(a2), 1ms pulse to extend
                           2ms pulse to retract
+button
+  a3 as output, a4 as input -- button connects a3 to a4
 
 ext temp sensor  --check
   setup spi1 for UEXT connector
-  pa5(d13 on CN1) SCK
-  pa6(d12 on CN1) MISO
-  pa7(d11 on CN1) MOSI
-  pa2(d10 on CN1) NSS  ??
+  pa5(d13 on CN1) SCK - green
+  pa6(d12 on CN1) MISO - orange
+  pa2(d10 on CN1) NSS  - yellow
+  vdd - red
+  gnd - brown

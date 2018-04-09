@@ -133,12 +133,19 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);*/
 
-  /*configure GPIO pins: a0-a2 for relays & actuator*/
-  GPIO_InitStruct.Pin = ARD_A2_Pin|ARD_A1_Pin|ARD_A0_Pin;
+  /*configure GPIO pins: a0-a3 for relays & actuator & button*/
+  GPIO_InitStruct.Pin = ARD_A3_Pin|ARD_A2_Pin|ARD_A1_Pin|ARD_A0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*configure GPIO pins: a4 as input for window state*/
+  GPIO_InitStruct.Pin = ARD_A4_Pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PAPin PAPin */
   GPIO_InitStruct.Pin = ARD_D1_Pin|ARD_D0_Pin;

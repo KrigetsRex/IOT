@@ -54,7 +54,7 @@ static uint8_t WIFI_xmit[68];
 static WIFI_Status_t stat;
 const char* server = "api.thingspeak.com";
 uint8_t  IP_Addr[4] = {184,106,153,149};
-float ext_temp = 0;
+uint16_t ext_temp = 0;
 float int_temp = 0;
 uint8_t mode = 0;
 uint8_t errorNum = 0;
@@ -62,13 +62,13 @@ uint8_t errorNum = 0;
 /* Private functions -----------------------------------------------*/
 void openWindow(){
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_delay(1);
+	HAL_Delay(1);
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
 }
 
 void closeWindow(){
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_delay(2);
+	HAL_Delay(2);
 	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
 }
 
@@ -90,8 +90,23 @@ void acOFF(){
 
 uint16_t getExtTemp(){
 	uint16_t temp = -1;
-	HAL_SPI_Receive(&hspi1, &temp, 12, 1);
+	uint8_t buf[2];
+	HAL_SPI_Receive(&hspi1, buf, 12, 1000);
+	temp = (((uint16_t)buf[1]) << 5) + (buf[0] >> 3);
 	return temp;
+}
+
+uint8_t getWindowState(){
+	uint8_t state = -1;
+	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_SET);
+	if (HAL_GPIO_ReadPin(GPIOC,ARD_A4_Pin) == GPIO_PIN_SET){
+		state = CLOSED;
+	}
+	else{
+		state = OPEN;
+	}
+	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_RESET);
+	return state;
 }
 
 /**
@@ -124,6 +139,23 @@ int main(void)
   SPI_WIFI_Init();
   WIFI_Init();
 
+  //functionality test
+  BSP_TSENSOR_ReadTemp(&int_temp);
+  ext_temp = getExtTemp();
+  uint8_t state = 9;
+  state = getWindowState();
+  if (state == OPEN){
+	  closeWindow();
+  }
+  else{
+	  openWindow();
+  }
+  furnaceON();
+  furnaceOFF();
+  acON();
+  acOFF();
+
+
   //Connect to Access Point
   stat = WIFI_Connect("LukeandMichelle","10122010",  WIFI_ECN_WPA2_PSK);
   if (stat != WIFI_STATUS_OK){
@@ -136,7 +168,7 @@ int main(void)
 
   while (1){
 	  BSP_TSENSOR_ReadTemp(&int_temp);
-	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%.2f&field4=%u",
+	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%u&field4=%u",
 	  mode, int_temp, ext_temp, errorNum);
 	  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
 	  thingSpeakUpdate(WIFI_xmit);
