@@ -3,81 +3,51 @@
   * @file           : main.c
   * @brief          : Main program body
   ******************************************************************************
-  ** This notice applies to any and all portions of this file
-  * that are not between comment pairs USER CODE BEGIN and
-  * USER CODE END. Other portions of this file, whether 
-  * inserted by the user or by software development tools
-  * are owned by their respective copyright owners.
-  *
-  * COPYRIGHT(c) 2018 STMicroelectronics
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
+  ** Temperature control for a house using an actuated window, AC, and furnace
   ******************************************************************************
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32l4xx_hal.h"
-#include "dfsdm.h"
-#include "i2c.h"
-#include "quadspi.h"
-#include "spi.h"
-#include "usart.h"
+//#include "dfsdm.h"
+//#include "quadspi.h"
+//#include "usart.h"
 #include "usb_otg.h"
-#include "gpio.h"
-#include "stm32l475e_iot01_tsensor.h"
-#include "stm32l4xx_hal.h"
-#include "setup.h"
+#include "Setup.h"
 
 /* Private variables ---------------------------------------------------------*/
 static uint8_t WIFI_xmit[68];
 static WIFI_Status_t stat;
-const char* server = "api.thingspeak.com";
-uint8_t  IP_Addr[4] = {184,106,153,149};
-uint16_t ext_temp = 0;
-float int_temp = 0;
-uint8_t mode = 0;
-uint8_t errorNum = 0;
+static const char* server = "api.thingspeak.com";
+static const uint8_t  IP_Addr[4] = {184,106,153,149};
+static uint16_t ext_temp = 0;
+static float int_temp = 0;
+static uint8_t desired_temp = 21;
+static uint8_t mode = ALL_OFF;
+static uint8_t errorNum = NO_ERROR;
+static uint8_t windowState = CLOSED;
+static uint8_t errorCorrection = 0;
 
 /* Private functions -----------------------------------------------*/
 void openWindow(){
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_Delay(2);
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
-	HAL_Delay(2);
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_Delay(2);
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+//	HAL_Delay(2);
+//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+	TIM2->ARR = 4;
+	TIM2->CCR1 = 2;
+	TIM2->CR1 = TIMER_ON;
+	HAL_Delay(10);
+	TIM2->CR1 = TIMER_OFF;
 }
 
 void closeWindow(){
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_Delay(1);
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
-	HAL_Delay(1);
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-	HAL_Delay(1);
-	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+//	HAL_Delay(1);
+//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+	TIM2->ARR = 2;
+	TIM2->CCR1 = 1;
+	TIM2->CR1 = TIMER_ON;
+	HAL_Delay(10);
+	TIM2->CR1 = TIMER_OFF;
 }
 
 void furnaceON(){
@@ -105,16 +75,32 @@ uint16_t getExtTemp(){
 }
 
 uint8_t getWindowState(){
-	uint8_t state = -1;
+	uint8_t state = 2;
 	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_SET);
-	if (HAL_GPIO_ReadPin(GPIOC,ARD_A4_Pin) == GPIO_PIN_SET){
+	GPIO_PinState pinState = HAL_GPIO_ReadPin(GPIOC,ARD_A4_Pin);
+	if (pinState == GPIO_PIN_SET){
 		state = CLOSED;
 	}
-	else{
+	else if (pinState == GPIO_PIN_RESET){
 		state = OPEN;
 	}
 	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_RESET);
 	return state;
+}
+
+void fixWindow(){
+	switch (errorNum){
+	case WINDOW_NOT_OPEN:
+		openWindow();
+		break;
+	case WINDOW_NOT_CLOSED:
+		closeWindow();
+		break;
+	default:
+		break;
+	}
+	HAL_Delay(30000);  //TODO find out how long
+	windowState = getWindowState();
 }
 
 /**
@@ -136,27 +122,31 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DFSDM1_Init();
+  //MX_DFSDM1_Init();
   MX_I2C2_Init();
-  MX_QUADSPI_Init();
+  //MX_QUADSPI_Init();
   //MX_SPI3_Init();
-  MX_USART1_UART_Init();
-  MX_USART3_UART_Init();
+  MX_SPI1_Init();
+  //MX_USART1_UART_Init();
+  //MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   BSP_TSENSOR_Init();
+  //MX_TIM2_Init();
+  tim2_init();
+  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
   SPI_WIFI_Init();
   WIFI_Init();
 
   //functionality test
-  BSP_TSENSOR_ReadTemp(&int_temp);
-  ext_temp = getExtTemp();
+  //HAL_TIM_PWM_Start(&htim2, 1);
   openWindow();
   closeWindow();
+  BSP_TSENSOR_ReadTemp(&int_temp);
+  ext_temp = getExtTemp();
   furnaceON();
   furnaceOFF();
   acON();
   acOFF();
-
 
   //Connect to Access Point
   stat = WIFI_Connect("LukeandMichelle","10122010",  WIFI_ECN_WPA2_PSK);
@@ -164,12 +154,146 @@ int main(void)
 	  stat = WIFI_Connect("iotclass","myiotclass",  WIFI_ECN_WPA2_PSK);
   }
 
-  //Connect to ThingSpeak
-  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
-  //WIFI_SendData((uint8_t)0, WIFI_connection, sizeof(WIFI_connection), &XferSize, Timeout);
-
   while (1){
 	  BSP_TSENSOR_ReadTemp(&int_temp);
+	  ext_temp = getExtTemp();
+	  windowState = getWindowState();
+	  //correct temperature
+	  int_temp = int_temp - 3;
+
+	  //check temp
+	  if (int_temp < desired_temp - 1 || int_temp > desired_temp + 1){
+		  switch (mode){
+		  case ALL_OFF:
+			  if (int_temp > desired_temp){ //too hot
+				  if (ext_temp < int_temp){ //cool outside
+					  openWindow();
+					  mode = WINDOW_COOL;
+				  }
+				  else{  //hot outside
+					  acON();
+					  mode = AC_ON;
+				  }
+			  }
+			  else{  //too cold
+				  if (ext_temp > int_temp){ //hot outside
+					  openWindow();
+					  mode = WINDOW_HEAT;
+				  }
+				  else{  //cold outside
+					  furnaceON();
+					  mode = FURNACE_ON;
+				  }
+			  }
+			  break;
+		  case WINDOW_COOL || WINDOW_HEAT:
+			  if (windowState != OPEN){
+				  windowState = getWindowState();
+				  if (windowState == CLOSED){
+					  errorNum = WINDOW_NOT_OPEN;
+				  }
+				  else if (windowState == OPEN){
+					  errorNum = NO_ERROR;
+				  }
+				  else{
+					  errorNum = WINDOW_UNK;
+				  }
+			  }
+			  else{
+				  errorNum = NO_ERROR;
+			  }
+			  break;
+		  case AC_ON:
+			  //TODO: figure out how to check
+			  errorNum = AC_UNK;
+			  break;
+		  case FURNACE_ON:
+			  //TODO: figure out how to check
+			  errorNum = FURNACE_UNK;
+			  break;
+		  }
+	  }
+	  else if (mode != ALL_OFF) {
+		  if (windowState != CLOSED){
+			  closeWindow();
+		  }
+		  acOFF();
+		  furnaceOFF();
+		  mode = ALL_OFF;
+	  }
+
+	  //error correction
+	  if (errorCorrection){
+		  switch (errorNum){
+		  case NO_ERROR:
+			  break;
+		  case WINDOW_NOT_CLOSED:
+			  fixWindow();
+			  if (windowState == CLOSED){
+				  errorNum = NO_ERROR;
+			  }
+			  break;
+		  case WINDOW_NOT_OPEN:
+			  fixWindow();
+			  if (windowState == OPEN){
+				  errorNum = NO_ERROR;
+			  }
+			  break;
+		  case WINDOW_UNK:
+			  windowState = getWindowState();
+			  switch(windowState){
+			  case OPEN:
+				  if (mode == WINDOW_COOL || mode == WINDOW_HEAT){
+					 errorNum = NO_ERROR;
+				  }
+				  else{
+					  errorNum = WINDOW_NOT_CLOSED;
+					  fixWindow();
+					  if (windowState == CLOSED){
+						  errorNum = NO_ERROR;
+					  }
+				  }
+				  break;
+			  case CLOSED:
+				  if (mode == WINDOW_COOL || mode == WINDOW_HEAT){
+					 errorNum = WINDOW_NOT_OPEN;
+					 fixWindow();
+					 if (windowState == OPEN){
+						 errorNum = NO_ERROR;
+					 }
+				  }
+				  else {
+					  errorNum = NO_ERROR;
+				  }
+				  break;
+			  default:
+				  break;
+			  }
+			  break;
+		  case FURNACE_NOT_OFF:
+			  furnaceOFF();
+			  break;
+		  case FURNACE_NOT_ON:
+			  furnaceON();
+			  break;
+		  case FURNACE_UNK:
+			  errorNum = NO_ERROR;
+			  break;
+		  case AC_NOT_OFF:
+			  acOFF();
+			  break;
+		  case AC_NOT_ON:
+			  acON();
+			  break;
+		  case AC_UNK:
+			  errorNum = NO_ERROR;
+			  break;
+		  }
+		  errorCorrection = 0;
+	  }
+
+
+	  //reporting
 	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%u&field4=%u",
 	  mode, int_temp, ext_temp, errorNum);
 	  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
@@ -177,4 +301,8 @@ int main(void)
 	  WIFI_CloseClientConnection(0);
 	  HAL_Delay(15000);
   }
+}
+
+void ISR(USER_BUTTON_EXTI_IRQn){
+	errorCorrection = 1;
 }
