@@ -149,6 +149,25 @@ void MX_TIM2_Init(void)
 }
 
 void tim2_init(void){
+	//clock config
+	TIM_ClockConfigTypeDef sClockSourceConfig;
+	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+	if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+	{
+	  _Error_Handler(__FILE__, __LINE__);
+	}
+	__HAL_RCC_TIM2_CLK_ENABLE();
+
+	//GPIO config
+	GPIO_InitTypeDef GPIO_InitStruct;
+	GPIO_InitStruct.Pin = GPIO_PIN_0;
+	GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	GPIO_InitStruct.Alternate = GPIO_AF1_TIM2;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	//reg config
 	TIM2->CR1 = TIMER_OFF;
 	TIM2->CCMR1 = 0x68;
 	TIM2->CCER = 1;

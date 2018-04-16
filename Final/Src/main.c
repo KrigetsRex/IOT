@@ -129,7 +129,7 @@ int main(void)
   MX_SPI1_Init();
   //MX_USART1_UART_Init();
   //MX_USART3_UART_Init();
-  MX_USB_OTG_FS_PCD_Init();
+  //MX_USB_OTG_FS_PCD_Init();
   BSP_TSENSOR_Init();
   //MX_TIM2_Init();
   tim2_init();
@@ -138,7 +138,6 @@ int main(void)
   WIFI_Init();
 
   //functionality test
-  //HAL_TIM_PWM_Start(&htim2, 1);
   openWindow();
   closeWindow();
   BSP_TSENSOR_ReadTemp(&int_temp);

@@ -1,6 +1,6 @@
 Setup.c:20:6:SystemClock_Config	240	static
 Setup.c:103:6:MX_TIM2_Init	64	static
-Setup.c:151:6:tim2_init	0	static
-Setup.c:164:6:_Error_Handler	0	static
-Setup.c:196:6:append_string	8	static
-Setup.c:211:6:thingSpeakUpdate	24	static
+Setup.c:151:6:tim2_init	48	static
+Setup.c:183:6:_Error_Handler	0	static
+Setup.c:215:6:append_string	8	static
+Setup.c:230:6:thingSpeakUpdate	24	static
