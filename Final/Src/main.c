@@ -36,7 +36,7 @@ void openWindow(){
 	TIM2->CCR1 = 2;
 	TIM2->CR1 = TIMER_ON;
 	HAL_Delay(10);
-	TIM2->CR1 = TIMER_OFF;
+	//TIM2->CR1 = TIMER_OFF;
 }
 
 void closeWindow(){
