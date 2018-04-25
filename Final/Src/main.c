@@ -29,25 +29,37 @@ static uint8_t errorCorrection = 0;
 
 /* Private functions -----------------------------------------------*/
 void openWindow(){
-//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-//	HAL_Delay(2);
-//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
-	TIM2->ARR = 4;
-	TIM2->CCR1 = 2;
-	TIM2->CR1 = TIMER_ON;
-	HAL_Delay(10);
-	//TIM2->CR1 = TIMER_OFF;
+	//manual pin toggling
+	for (uint8_t count = 0; count < 50; count++){
+		HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+		HAL_Delay(2);
+		HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+		HAL_Delay(2);
+	}
+
+	//pwm
+//	TIM2->ARR = 4;
+//	TIM2->CCR1 = 2;
+//	TIM2->CR1 = TIMER_ON;
+//	HAL_Delay(10);
+//	TIM2->CR1 = TIMER_OFF;
 }
 
 void closeWindow(){
-//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
-//	HAL_Delay(1);
-//	HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
-	TIM2->ARR = 2;
-	TIM2->CCR1 = 1;
-	TIM2->CR1 = TIMER_ON;
-	HAL_Delay(10);
-	TIM2->CR1 = TIMER_OFF;
+	//manually toggling pin
+	for (uint8_t count = 0; count < 50; count++){
+		HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_SET);
+		HAL_Delay(1);
+		HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
+		HAL_Delay(1);
+	}
+
+	//pwm
+//	TIM2->ARR = 2;
+//	TIM2->CCR1 = 1;
+//	TIM2->CR1 = TIMER_ON;
+//	HAL_Delay(10);
+//	TIM2->CR1 = TIMER_OFF;
 }
 
 void furnaceON(){
@@ -69,7 +81,9 @@ void acOFF(){
 uint16_t getExtTemp(){
 	uint16_t temp = -1;
 	uint8_t buf[2];
-	HAL_SPI_Receive(&hspi1, buf, 12, 1000);
+	HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_RESET);
+	HAL_SPI_Receive(&hspi1, buf, 2, 1000);
+	HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_SET);
 	temp = (((uint16_t)buf[1]) << 5) + (buf[0] >> 3);
 	return temp;
 }
@@ -99,7 +113,7 @@ void fixWindow(){
 	default:
 		break;
 	}
-	HAL_Delay(30000);  //TODO find out how long
+	HAL_Delay(15000);  //takes ~12 sec
 	windowState = getWindowState();
 }
 
@@ -132,16 +146,16 @@ int main(void)
   //MX_USB_OTG_FS_PCD_Init();
   BSP_TSENSOR_Init();
   //MX_TIM2_Init();
-  tim2_init();
+  //tim2_init();
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
   SPI_WIFI_Init();
   WIFI_Init();
 
   //functionality test
+  ext_temp = getExtTemp();
+  BSP_TSENSOR_ReadTemp(&int_temp);
   openWindow();
   closeWindow();
-  BSP_TSENSOR_ReadTemp(&int_temp);
-  ext_temp = getExtTemp();
   furnaceON();
   furnaceOFF();
   acON();

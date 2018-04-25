@@ -98,6 +98,7 @@ void MX_SPI1_Init(void)
     _Error_Handler(__FILE__, __LINE__);
   }
 
+  __HAL_RCC_SPI1_CLK_ENABLE();
 }
 
 void HAL_SPI_MspInit1(SPI_HandleTypeDef* spiHandle)
@@ -123,10 +124,6 @@ void HAL_SPI_MspInit1(SPI_HandleTypeDef* spiHandle)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF6_SPI3;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /* USER CODE BEGIN SPI3_MspInit 1 */
-
-  /* USER CODE END SPI3_MspInit 1 */
   }
 }
 
@@ -147,23 +144,7 @@ void HAL_SPI_MspDeInit1(SPI_HandleTypeDef* spiHandle)
     PC12     ------> SPI3_MOSI 
     */
     HAL_GPIO_DeInit(GPIOC, INTERNAL_SPI3_SCK_Pin|INTERNAL_SPI3_MISO_Pin|INTERNAL_SPI3_MOSI_Pin);
-
-  /* USER CODE BEGIN SPI3_MspDeInit 1 */
-
-  /* USER CODE END SPI3_MspDeInit 1 */
   }
 } 
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
