@@ -81,11 +81,16 @@ void acOFF(){
 uint16_t getExtTemp(){
 	uint16_t temp = -1;
 	uint8_t buf[2];
-	HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_RESET);
-	HAL_SPI_Receive(&hspi1, buf, 2, 1000);
-	HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_SET);
+	//HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_RESET);
+	HAL_StatusTypeDef status = HAL_SPI_Receive(&hspi1, buf, 2, 1000);
+	//HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_SET);
 	temp = (((uint16_t)buf[1]) << 5) + (buf[0] >> 3);
-	return temp;
+	if (status == HAL_OK){
+		return temp;
+	}
+	else{
+		return -1;
+	}
 }
 
 uint8_t getWindowState(){
