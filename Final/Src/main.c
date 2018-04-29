@@ -19,7 +19,7 @@ static uint8_t WIFI_xmit[68];
 static WIFI_Status_t stat;
 static const char* server = "api.thingspeak.com";
 static const uint8_t  IP_Addr[4] = {184,106,153,149};
-static uint16_t ext_temp = 0;
+static float ext_temp = 0;
 static float int_temp = 0;
 static uint8_t desired_temp = 21;
 static uint8_t mode = ALL_OFF;
@@ -36,13 +36,6 @@ void openWindow(){
 		HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
 		HAL_Delay(2);
 	}
-
-	//pwm
-//	TIM2->ARR = 4;
-//	TIM2->CCR1 = 2;
-//	TIM2->CR1 = TIMER_ON;
-//	HAL_Delay(10);
-//	TIM2->CR1 = TIMER_OFF;
 }
 
 void closeWindow(){
@@ -53,13 +46,6 @@ void closeWindow(){
 		HAL_GPIO_WritePin(GPIOC,ARD_A2_Pin,GPIO_PIN_RESET);
 		HAL_Delay(1);
 	}
-
-	//pwm
-//	TIM2->ARR = 2;
-//	TIM2->CCR1 = 1;
-//	TIM2->CR1 = TIMER_ON;
-//	HAL_Delay(10);
-//	TIM2->CR1 = TIMER_OFF;
 }
 
 void furnaceON(){
@@ -78,19 +64,41 @@ void acOFF(){
 	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_SET);
 }
 
-uint16_t getExtTemp(){
-	uint16_t temp = -1;
-	uint8_t buf[2];
-	//HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_RESET);
-	HAL_StatusTypeDef status = HAL_SPI_Receive(&hspi1, buf, 2, 1000);
-	//HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_SET);
-	temp = (((uint16_t)buf[1]) << 5) + (buf[0] >> 3);
-	if (status == HAL_OK){
-		return temp;
-	}
-	else{
-		return -1;
-	}
+//float getExtTemp(){
+//	float temp = -1;
+//	uint8_t buf[2];
+//	buf[0] = 0;
+//	buf[1] = 0;
+//	HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_RESET);
+//	HAL_StatusTypeDef status = HAL_SPI_Receive(&hspi1, buf, 2, 1000);
+//	HAL_GPIO_WritePin(GPIOC,ARD_D10_Pin,GPIO_PIN_SET);
+//	temp = (((uint16_t)buf[1]) << 5) + (buf[0] >> 3);
+//	temp = temp / 4;
+//	if (status == HAL_OK){
+//		return temp;
+//	}
+//	else{
+//		return -1;
+//	}
+//}
+
+float getExtTemp(){
+	float temp = -1;
+		uint8_t buf[4];
+		buf[0] = 0;
+		buf[1] = 0;
+		buf[2] = 0;
+		buf[3] = 0;
+		HAL_GPIO_WritePin(GPIOA,ARD_D12_Pin,GPIO_PIN_SET);
+		HAL_StatusTypeDef status = HAL_SPI_Receive(&hspi1, buf, 4, 1000);
+		HAL_GPIO_WritePin(GPIOA,ARD_D12_Pin,GPIO_PIN_RESET);
+		temp = buf[0] & (buf[1]<<8) & (buf[2]<<16) & (buf[3]<<24);
+		if (status == HAL_OK){
+			return temp;
+		}
+		else{
+			return -1;
+		}
 }
 
 uint8_t getWindowState(){
@@ -140,18 +148,10 @@ int main(void)
   SystemClock_Config();
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  //MX_DFSDM1_Init();
-  MX_I2C2_Init();
-  //MX_QUADSPI_Init();
-  //MX_SPI3_Init();
   MX_SPI1_Init();
-  //MX_USART1_UART_Init();
-  //MX_USART3_UART_Init();
-  //MX_USB_OTG_FS_PCD_Init();
+  MX_GPIO_Init();
+  MX_I2C2_Init();
   BSP_TSENSOR_Init();
-  //MX_TIM2_Init();
-  //tim2_init();
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
   SPI_WIFI_Init();
   WIFI_Init();
