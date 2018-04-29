@@ -6,9 +6,9 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "gpio.h"
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_hal_spi.h"
+#include "stm32l4xx_hal_gpio.h"
 #include "i2c.h"
 #include "stm32l475e_iot01_tsensor.h"
 
@@ -20,7 +20,6 @@ void SystemClock_Config(void);
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 float temp_value = 0;
-uint8_t buff[4];
 
 
 /**
@@ -38,20 +37,17 @@ int main(void)
   SystemClock_Config();
 
   /* Initialize all configured peripherals */
-  MX_GPIO_Init();
   MX_SPI1_Init();
+  MX_GPIO_Init();
   MX_I2C2_Init();
   BSP_TSENSOR_Init();
 
-}
-
-void ISR(EXTI15_10_IRQn){
-	 BSP_TSENSOR_ReadTemp(&temp_value);
-	 buff[0] = (uint8_t)(0xFF & (uint32_t)temp_value);
-	 buff[1] = (uint8_t)((0xFF00 & (uint32_t)temp_value)>>8);
-	 buff[2] = (uint8_t)((0xFF0000 & (uint32_t)temp_value)>>16);
-	 buff[3] = (uint8_t)((0xFF000000 & (uint32_t)temp_value)>>24);
-	 HAL_SPI_Transmit(&hspi1, &buff[0], 4, 1000);
+  while (1){
+  	  if (HAL_GPIO_ReadPin(GPIOA, ARD_D12_Pin) == GPIO_PIN_SET){
+		 BSP_TSENSOR_ReadTemp(&temp_value);
+		 HAL_SPI_Transmit(&hspi1, &temp_value, 4, 1000);
+  	  }
+  }
 }
 
 /**
@@ -153,14 +149,10 @@ void MX_GPIO_Init(void)
 
   /*spi interrupt start transmission*/
   GPIO_InitStruct.Pin = ARD_D12_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
-
 }
 
 /**
