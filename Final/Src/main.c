@@ -8,9 +8,6 @@
   */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-//#include "dfsdm.h"
-//#include "quadspi.h"
-//#include "usart.h"
 #include "usb_otg.h"
 #include "Setup.h"
 
@@ -64,6 +61,7 @@ void acOFF(){
 	HAL_GPIO_WritePin(GPIOC,ARD_A1_Pin,GPIO_PIN_SET);
 }
 
+/*Thermocouple getExtTemp method*/
 //float getExtTemp(){
 //	float temp = -1;
 //	uint8_t buf[2];
@@ -99,13 +97,13 @@ uint8_t getWindowState(){
 	uint8_t state = 2;
 	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_SET);
 	GPIO_PinState pinState = HAL_GPIO_ReadPin(GPIOC,ARD_A4_Pin);
+	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_RESET);
 	if (pinState == GPIO_PIN_SET){
 		state = CLOSED;
 	}
 	else if (pinState == GPIO_PIN_RESET){
 		state = OPEN;
 	}
-	HAL_GPIO_WritePin(GPIOC,ARD_A3_Pin,GPIO_PIN_RESET);
 	return state;
 }
 
@@ -147,18 +145,9 @@ int main(void)
   MX_I2C2_Init();
   BSP_TSENSOR_Init();
   BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
+  BSP_LED_Init(LED2);
   SPI_WIFI_Init();
   WIFI_Init();
-
-  //functionality test
-  ext_temp = getExtTemp();
-  BSP_TSENSOR_ReadTemp(&int_temp);
-  openWindow();
-  closeWindow();
-  furnaceON();
-  furnaceOFF();
-  acON();
-  acOFF();
 
   //Connect to Access Point
   stat = WIFI_Connect("LukeandMichelle","10122010",  WIFI_ECN_WPA2_PSK);
@@ -170,8 +159,10 @@ int main(void)
 	  BSP_TSENSOR_ReadTemp(&int_temp);
 	  ext_temp = getExtTemp();
 	  windowState = getWindowState();
-	  //correct temperature
-	  int_temp = int_temp - 3;
+
+	  if (windowState){
+		  ext_temp = 40;
+	  }
 
 	  //check temp
 	  if (int_temp < desired_temp - 1 || int_temp > desired_temp + 1){
@@ -183,6 +174,9 @@ int main(void)
 					  mode = WINDOW_COOL;
 				  }
 				  else{  //hot outside
+					  //if(windowState == OPEN){
+						  closeWindow();
+					  //}
 					  acON();
 					  mode = AC_ON;
 				  }
@@ -193,6 +187,9 @@ int main(void)
 					  mode = WINDOW_HEAT;
 				  }
 				  else{  //cold outside
+					  //if(windowState == OPEN){
+						  closeWindow();
+					  //}
 					  furnaceON();
 					  mode = FURNACE_ON;
 				  }
@@ -203,12 +200,14 @@ int main(void)
 				  windowState = getWindowState();
 				  if (windowState == CLOSED){
 					  errorNum = WINDOW_NOT_OPEN;
+					  BSP_LED_On(LED2);
 				  }
 				  else if (windowState == OPEN){
 					  errorNum = NO_ERROR;
 				  }
 				  else{
 					  errorNum = WINDOW_UNK;
+					  BSP_LED_On(LED2);
 				  }
 			  }
 			  else{
@@ -226,9 +225,9 @@ int main(void)
 		  }
 	  }
 	  else if (mode != ALL_OFF) {
-		  if (windowState != CLOSED){
+		  //if (windowState != CLOSED){
 			  closeWindow();
-		  }
+		  //}
 		  acOFF();
 		  furnaceOFF();
 		  mode = ALL_OFF;
@@ -301,17 +300,22 @@ int main(void)
 			  errorNum = NO_ERROR;
 			  break;
 		  }
+		  BSP_LED_Off(LED2);
 		  errorCorrection = 0;
 	  }
 
 
 	  //reporting
-	  sprintf(WIFI_xmit, "field1=%u&field2=%.2f&field3=%u&field4=%u",
-	  mode, int_temp, ext_temp, errorNum);
-	  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
-	  thingSpeakUpdate(WIFI_xmit);
-	  WIFI_CloseClientConnection(0);
-	  HAL_Delay(15000);
+	  if (stat == WIFI_STATUS_OK){
+		  HAL_Delay(5000);
+		  sprintf(WIFI_xmit, "field1=%u&field2=%u&field3=%u&field4=%u",
+		  (int8_t)int_temp, (int8_t)ext_temp, mode, errorNum);
+		  WIFI_OpenClientConnection(0, WIFI_TCP_PROTOCOL, server, IP_Addr, 80, 0);
+		  thingSpeakUpdate(WIFI_xmit);
+		  WIFI_CloseClientConnection(0);
+		  HAL_Delay(5000);
+	  }
+	  HAL_Delay(5000);
   }
 }
 
